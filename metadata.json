@@ -1,0 +1,6 @@
+{
+  "name": "Sebatik Barat District Portal",
+  "description": "Website resmi Kecamatan Sebatik Barat dengan Next.js 15, menampilkan potensi perbatasan melalui desain Editorial Aesthetic bertema Creme & Emerald yang modern.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": []
+}

@@ -1,0 +1,7 @@
+{
+  "/profil/page": "app/profil/page.js",
+  "/sarana-prasarana/page": "app/sarana-prasarana/page.js",
+  "/umkm/page": "app/umkm/page.js",
+  "/page": "app/page.js",
+  "/kewilayahan/page": "app/kewilayahan/page.js"
+}
