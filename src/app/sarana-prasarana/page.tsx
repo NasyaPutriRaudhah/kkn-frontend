@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GraduationCap, Trophy, Activity, Bus, Church, MapPin } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import StuntCheck from '../../components/StuntCheck';
 
 const categories = [
   { id: 'pendidikan', label: 'Pendidikan', icon: GraduationCap },
@@ -120,6 +121,8 @@ export default function Facilities() {
             </motion.div>
           </AnimatePresence>
         </div>
+
+        {activeTab === 'kesehatan' && <div className="mt-20"><StuntCheck /></div>}
       </div>
     </div>
   );

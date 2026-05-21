@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Palette, Camera } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import FestivalCalendar from '../../components/FestivalCalendar';
 
 const cultureData = [
   { 
@@ -32,6 +34,8 @@ const cultureData = [
 ];
 
 export default function Culture() {
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
   return (
     <div className="pt-32 pb-24 px-8 overflow-hidden bg-stone-50 dark:bg-brand-creme min-h-screen">
       <div className="max-w-7xl mx-auto">
@@ -103,7 +107,7 @@ export default function Culture() {
               Puncak apresiasi budaya masyarakat perbatasan yang mempertemukan harmoni seni, tradisi, dan inovasi gastromoni Sebatik Barat.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8">
-              <button className="px-12 py-5 bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-emerald-100 hover:bg-emerald-600 transition-all">
+              <button onClick={() => setCalendarOpen(true)} className="px-12 py-5 bg-emerald-500 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-2xl shadow-emerald-100 hover:bg-emerald-600 transition-all">
                 Kalender Event
               </button>
               <button className="px-12 py-5 bg-white dark:bg-stone-200 text-emerald-900 dark:text-stone-900 border border-emerald-50 dark:border-stone-300 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-stone-100 transition-all">
@@ -112,6 +116,8 @@ export default function Culture() {
             </div>
           </div>
         </section>
+
+        <FestivalCalendar isOpen={calendarOpen} onClose={() => setCalendarOpen(false)} />
       </div>
     </div>
   );

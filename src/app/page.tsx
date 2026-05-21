@@ -1,8 +1,8 @@
 'use client';
 
 import { motion, useScroll, useTransform } from 'motion/react';
-import { useRef, useState, ReactNode } from 'react';
-import { ArrowRight, Users, Map as MapIcon, Calendar, Heart, Compass } from 'lucide-react';
+import { useRef, useState, useCallback, useEffect, ReactNode } from 'react';
+import { ArrowRight, Users, Map as MapIcon, Calendar, Heart, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
@@ -192,7 +192,7 @@ export default function Home() {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4">Explore Sebatik Barat</h2>
           <p className="text-stone-500 dark:text-stone-600">Buka lembaran pesona alam dan budaya kami dalam katalog digital interaktif.</p>
         </div>
-        <div className="max-w-4xl mx-auto h-[500px]">
+        <div className="max-w-6xl mx-auto">
           <DigitalBook />
         </div>
       </section>
@@ -244,11 +244,6 @@ function NewsCard({ image, date, title, desc }: { image: string, date: string, t
 }
 
 function DigitalBook() {
-  const [currentSpread, setCurrentSpread] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [turnPage, setTurnPage] = useState<'right' | 'left' | null>(null);
-  const [nextContent, setNextContent] = useState<typeof pages[0] | null>(null);
-
   const pages = [
     { title: "Pesisir Nan Indah", desc: "Pantai berpasir putih dengan lambaian nyiur yang menenangkan jiwa.", img: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&q=80&w=800" },
     { title: "Kekayaan Laut", desc: "Hasil laut yang melimpah menjadi sumber penghidupan utama warga Liang Bunyu.", img: "https://images.unsplash.com/photo-1518104593124-ac2e82a5eb9d?auto=format&fit=crop&q=80&w=800" },
@@ -258,163 +253,100 @@ function DigitalBook() {
     { title: "Kerajinan Tangan", desc: "Keterampilan warga yang diwariskan secara turun-temurun.", img: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800" },
   ];
 
-  const nextSpread = () => {
-    if (isAnimating || currentSpread >= Math.ceil(pages.length / 2) - 1) return;
-    setIsAnimating(true);
-    const nextIdx = currentSpread * 2 + 2;
-    if (nextIdx < pages.length) {
-      setNextContent(pages[nextIdx]);
-      setTurnPage('right');
-      setTimeout(() => {
-        setCurrentSpread(s => s + 1);
-        setTurnPage(null);
-        setNextContent(null);
-        setTimeout(() => setIsAnimating(false), 100);
-      }, 700);
-    }
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(true);
+
+  const scrollTo = (idx: number) => {
+    if (!scrollRef.current) return;
+    const cardWidth = scrollRef.current.clientWidth * 0.85 + 24;
+    scrollRef.current.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
   };
 
-  const prevSpread = () => {
-    if (isAnimating || currentSpread <= 0) return;
-    setIsAnimating(true);
-    const prevIdx = currentSpread * 2 - 1;
-    if (prevIdx >= 0) {
-      setNextContent(pages[prevIdx]);
-      setTurnPage('left');
-      setTimeout(() => {
-        setCurrentSpread(s => s - 1);
-        setTurnPage(null);
-        setNextContent(null);
-        setTimeout(() => setIsAnimating(false), 100);
-      }, 700);
-    }
-  };
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, clientWidth } = scrollRef.current;
+    const cardWidth = clientWidth * 0.85 + 24;
+    const idx = Math.round(scrollLeft / cardWidth);
+    setActiveIdx(Math.min(idx, pages.length - 1));
+    setShowLeftArrow(scrollLeft > 20);
+    setShowRightArrow(scrollLeft < scrollRef.current.scrollWidth - clientWidth - 20);
+  }, [pages.length]);
 
-  const spreadPages = pages.slice(currentSpread * 2, currentSpread * 2 + 2);
-  const totalSpreads = Math.ceil(pages.length / 2);
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   return (
-    <div className="relative w-full h-full flex flex-col items-center gap-8">
-      <div className="book-container relative w-full max-w-5xl mx-auto h-[420px] md:h-[520px]">
-        <div className="absolute -bottom-2 left-[5%] right-[5%] h-6 bg-black/10 dark:bg-black/30 blur-xl rounded-full" />
-        
-        <div className="relative w-full h-full bg-[#e8e0d0] dark:bg-[#c4bca8] rounded-2xl shadow-2xl p-3 md:p-4 flex">
-          {/* Left page */}
-          <div className="relative w-1/2 h-full pr-[2px]">
-            {spreadPages[0] && (
-              <PageFace
-                page={spreadPages[0]}
-                turnContent={turnPage === 'left' ? nextContent : null}
-                turning={turnPage === 'left'}
-                pageNum={currentSpread * 2 + 1}
-              />
-            )}
-            {!spreadPages[0] && <EmptyPage />}
-          </div>
-
-          {/* Spine */}
-          <div className="w-3 md:w-4 relative flex-shrink-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#d4cbb8] via-[#c0b6a0] to-[#d4cbb8] dark:from-[#b0a690] dark:via-[#9e9480] dark:to-[#b0a690] rounded-sm" />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-transparent" />
-          </div>
-
-          {/* Right page */}
-          <div className="relative w-1/2 h-full pl-[2px]">
-            {spreadPages[1] && (
-              <PageFace
-                page={spreadPages[1]}
-                turnContent={turnPage === 'right' ? nextContent : null}
-                turning={turnPage === 'right'}
-                pageNum={currentSpread * 2 + 2}
-              />
-            )}
-            {!spreadPages[1] && <EmptyPage />}
-          </div>
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <div className="flex items-center gap-6">
-        <button
-          onClick={prevSpread}
-          disabled={currentSpread === 0 || isAnimating}
-          className="px-6 py-3 rounded-full bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-emerald-600 transition-all shadow-lg flex items-center gap-2"
-        >
-          <span className="text-base">&larr;</span> Sebelumnya
-        </button>
-        <div className="flex items-center gap-3">
-          {Array.from({ length: totalSpreads }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => { if (!isAnimating) { setCurrentSpread(i); } }}
-              className={cn(
-                "w-3 h-3 rounded-full transition-all",
-                currentSpread === i
-                  ? "bg-emerald-500 scale-125 shadow-md"
-                  : "bg-stone-300 dark:bg-stone-500 hover:bg-stone-400"
-              )}
-            />
-          ))}
-        </div>
-        <button
-          onClick={nextSpread}
-          disabled={currentSpread >= totalSpreads - 1 || isAnimating}
-          className="px-6 py-3 rounded-full bg-emerald-500 text-white text-xs font-bold uppercase tracking-widest disabled:opacity-30 hover:bg-emerald-600 transition-all shadow-lg flex items-center gap-2"
-        >
-          Selanjutnya <span className="text-base">&rarr;</span>
-        </button>
-      </div>
-    </div>
-  );
-}
-
-function PageFace({ page, turnContent, turning, pageNum }: {
-  page: { title: string; desc: string; img: string }, turnContent: typeof page | null, turning: boolean, pageNum: number
-}) {
-  return (
-    <div className="relative w-full h-full [perspective:1500px]">
+    <div className="relative w-full">
       <div
-        className={cn(
-          "relative w-full h-full [transform-style:preserve-3d] transition-transform duration-[0.7s] ease-[cubic-bezier(0.645,0.045,0.355,1)]",
-          turning && "[transform:rotateY(-180deg)]"
-        )}
+        ref={scrollRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 no-scrollbar"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {/* Front */}
-        <div className="absolute inset-0 [backface-visibility:hidden] rounded-xl overflow-hidden shadow-inner">
-          <img src={page.img} alt={page.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4 md:p-8 text-left">
-            <h3 className="text-lg md:text-2xl font-serif font-bold text-white mb-1">{page.title}</h3>
-            <p className="text-white/60 text-xs md:text-sm max-w-xs leading-relaxed">{page.desc}</p>
-          </div>
-          <div className="absolute bottom-3 right-4 text-[10px] text-white/40 font-bold uppercase tracking-widest">
-            {pageNum}
-          </div>
-        </div>
-        {/* Back — shows the new page content being turned to */}
-        <div className="absolute inset-0 [backface-visibility:hidden] [transform:rotateY(180deg)] rounded-xl overflow-hidden shadow-inner">
-          {turnContent ? (
-            <>
-              <img src={turnContent.img} alt={turnContent.title} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4 md:p-8 text-left">
-                <h3 className="text-lg md:text-2xl font-serif font-bold text-white mb-1">{turnContent.title}</h3>
-                <p className="text-white/60 text-xs md:text-sm max-w-xs leading-relaxed">{turnContent.desc}</p>
-              </div>
-            </>
-          ) : (
-            <div className="w-full h-full bg-[#FCFBF4] dark:bg-[#d8d1c1] flex items-center justify-center">
-              <div className="w-8 h-0.5 bg-emerald-200" />
+        {pages.map((page, i) => (
+          <div
+            key={i}
+            className="snap-start shrink-0 w-[85%] sm:w-[45%] lg:w-[30%] group relative overflow-hidden rounded-[2.5rem] bg-white dark:bg-brand-creme border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
+          >
+            <div className="aspect-[3/4] overflow-hidden">
+              <img
+                src={page.img}
+                alt={page.title}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
             </div>
-          )}
-        </div>
+            <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
+              <div className="w-8 h-0.5 bg-emerald-400 mb-4 rounded-full" />
+              <h3 className="text-xl sm:text-2xl font-serif font-bold text-white mb-2">{page.title}</h3>
+              <p className="text-white/60 text-sm leading-relaxed line-clamp-2">{page.desc}</p>
+            </div>
+            <div className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white text-[10px] font-black">
+              {i + 1}
+            </div>
+          </div>
+        ))}
       </div>
-    </div>
-  );
-}
 
-function EmptyPage() {
-  return (
-    <div className="w-full h-full rounded-xl bg-[#f5efe0] dark:bg-[#c8c0ac] flex items-center justify-center">
-      <p className="text-stone-400 dark:text-stone-500 text-xs font-medium">Kosong</p>
+      {/* Arrow buttons */}
+      {showLeftArrow && (
+        <button
+          onClick={() => scrollTo(activeIdx - 1)}
+          className="absolute left-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-brand-creme shadow-xl border border-emerald-50 dark:border-stone-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-50 transition-all z-10 hidden sm:flex"
+        >
+          <ChevronLeft size={22} />
+        </button>
+      )}
+      {showRightArrow && (
+        <button
+          onClick={() => scrollTo(activeIdx + 1)}
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white dark:bg-brand-creme shadow-xl border border-emerald-50 dark:border-stone-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-50 transition-all z-10 hidden sm:flex"
+        >
+          <ChevronRight size={22} />
+        </button>
+      )}
+
+      {/* Dots */}
+      <div className="flex items-center justify-center gap-2 mt-8">
+        {pages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className={cn(
+              "rounded-full transition-all",
+              i === activeIdx
+                ? "w-8 h-2 bg-emerald-500"
+                : "w-2 h-2 bg-stone-300 dark:bg-stone-500 hover:bg-stone-400"
+            )}
+          />
+        ))}
+      </div>
     </div>
   );
 }

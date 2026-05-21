@@ -64,6 +64,8 @@
   @apply bg-stone-50 dark:bg-stone-200 rounded-3xl border border-emerald-100 dark:border-stone-300 shadow-sm p-6 hover:shadow-md transition-shadow;
 }
 
+@import 'leaflet/dist/leaflet.css';
+
 /* Flipbook Styles */
 .book-container {
   perspective: 1500px;
