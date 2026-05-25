@@ -30,7 +30,7 @@ export default function Home() {
         <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/80 via-emerald-700/20 to-transparent z-10" />
           <img 
-            src="/assets/sebatik.webp" 
+            src="/assets/4.jpg" 
             alt="Sebatik Landscape" 
             className="w-full h-full object-cover"
           />
