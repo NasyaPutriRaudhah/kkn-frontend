@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import L from 'leaflet';
 import { useTheme } from './ThemeProvider';
+
+const markerIcon = L.icon({
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41],
+});
 
 const villages = [
   { name: 'Desa Binalawan', position: [4.1139694, 117.7859889] as [number, number], description: 'Pusat pemerintahan Kecamatan Sebatik Barat.' },
@@ -14,18 +24,6 @@ const villages = [
 function MapInner() {
   const { theme } = useTheme();
 
-  useEffect(() => {
-    const L = require('leaflet');
-
-    delete (L.Icon.Default.prototype as any)._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-    });
-  }, []);
-
   const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const darkUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
@@ -36,7 +34,7 @@ function MapInner() {
         url={theme === 'dark' ? darkUrl : lightUrl}
       />
       {villages.map((village) => (
-        <Marker key={village.name} position={village.position}>
+        <Marker key={village.name} position={village.position} icon={markerIcon}>
           <Popup>
             <div className="p-2">
               <h3 className="font-bold text-lg mb-1">{village.name}</h3>

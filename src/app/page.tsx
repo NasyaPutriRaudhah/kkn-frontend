@@ -30,7 +30,7 @@ export default function Home() {
         <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-tr from-emerald-900/80 via-emerald-700/20 to-transparent z-10" />
           <img 
-            src="/assets/hawaii-beach-landscape-with-ocean-view.jpg" 
+            src="/assets/sebatik.webp" 
             alt="Sebatik Landscape" 
             className="w-full h-full object-cover"
           />
@@ -93,7 +93,7 @@ export default function Home() {
             <StatCard icon={<Users className="text-emerald-500" />} label="Populasi" value="18,450+" sub="Jiwa Terdaftar" />
             <StatCard icon={<MapIcon className="text-emerald-500" />} label="Luas Wilayah" value="95.2" sub="Kilometer Persegi" dark />
             <StatCard icon={<Compass className="text-emerald-500" />} label="Desa" value="4" sub="Terintegrasi" />
-            <StatCard icon={<Heart className="text-emerald-500" />} label="Kultivasi SDA" value="12" sub="Sektor Unggulan" dark />
+            <StatCard icon={<Calendar className="text-emerald-500" />} label="Event Tahunan" value="12+" sub="Festival & Budaya" dark />
           </div>
         </div>
       </section>

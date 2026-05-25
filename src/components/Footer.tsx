@@ -8,7 +8,7 @@ import Image from 'next/image';
 export default function Footer() {
   return (
     <footer className="bg-[#d8d1c1] dark:bg-[#d8d1c1] border-t border-emerald-100 dark:border-stone-300 pt-20 pb-12 px-8">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
         {/* Brand */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-3">
@@ -77,25 +77,10 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Newsletter */}
-        <div>
-          <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-6">Buletin Digital</h4>
-          <p className="text-xs text-stone-500 dark:text-stone-600 mb-6 leading-relaxed">Berlangganan untuk mendapatkan berita pembangunan terbaru secara periodik.</p>
-          <div className="flex gap-2">
-            <input 
-              type="email" 
-              placeholder="Email"
-              className="bg-white dark:bg-brand-creme border border-emerald-50 dark:border-stone-300 rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-emerald-600 w-full shadow-sm"
-            />
-            <button className="bg-emerald-500 text-white rounded-xl px-6 py-3 text-xs font-bold hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100 dark:shadow-none">
-              Daftar
-            </button>
-          </div>
-        </div>
       </div>
 
       <div className="max-w-7xl mx-auto pt-10 border-t border-emerald-50 dark:border-stone-300 text-center text-xs text-stone-700 font-bold uppercase tracking-widest">
-        <p>© 2026 PEMERINTAH KABUPATEN NUNUKAN • KECAMATAN SEBATIK BARAT</p>
+        <p>© 2026 KKN-PPM UGM TAKA SEBATIK • KECAMATAN SEBATIK BARAT</p>
       </div>
     </footer>
   );

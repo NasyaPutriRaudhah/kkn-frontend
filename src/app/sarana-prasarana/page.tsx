@@ -43,12 +43,15 @@ const facilitiesData = {
     { title: 'Poskesdes Bambangan', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1538108197017-c1c46cbdd097?auto=format&fit=crop&q=80&w=600', mapsUrl: '', waUrl: '' },
   ],
   transportasi: [
-    { title: 'Dermaga Bambangan', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1495470129215-6804cfd693bf?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
-    { title: 'Terminal Angkutan Desa', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
+    { title: 'Dermaga Feri Liang Bunyu', loc: 'Desa Liang Bunyu', img: '/assets/feri.jpeg', mapsUrl: 'https://maps.app.goo.gl/vmAt8wtsTixZjfSU8' },
   ],
   ibadah: [
-    { title: 'Masjid Jami Binalawan', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
-    { title: 'Gereja Paroki Liang Bunyu', loc: 'Desa Liang Bunyu', img: 'https://images.unsplash.com/photo-1548625313-039e4402662c?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
+    { title: 'Masjid At Ataqwa', loc: 'Desa Setabu', img: '/assets/ataqwa.png', mapsUrl: 'https://maps.app.goo.gl/nnfaPjw4dVRvm8bu5' },
+    { title: 'Masjid Al-Mustaqim', loc: 'Desa Binalawan', img: '', mapsUrl: 'https://maps.app.goo.gl/LRtHGWbhPHvrxsQe6' },
+    { title: 'Masjid Darul Muslimin', loc: 'Desa Liang Bunyu', img: '/assets/muslimin.png', mapsUrl: 'https://maps.app.goo.gl/MLPQCEzo69KxZk9G7' },
+    { title: 'Gereja Sidang Jemaat Yesus', loc: 'Desa Liang Bunyu', img: '', mapsUrl: 'https://maps.app.goo.gl/fSRtdwydKEZKGuQw5' },
+    { title: 'St. Leonard Catholic Church', loc: 'Desa Liang Bunyu', img: '/assets/gereja.png', mapsUrl: 'https://maps.app.goo.gl/Et7FUSAh1xQYdYms8' },
+    { title: ' Pos Pelkes "Immanuel" Bambangan', loc: 'Desa Liang Bunyu', img: '/assets/gereja2.png', mapsUrl: 'https://maps.app.goo.gl/aH9nWiSw3b2yQ1Th9' },
   ],
 };
 
