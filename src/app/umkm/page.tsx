@@ -87,7 +87,7 @@ export default function UMKM() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="group bg-white dark:bg-brand-creme rounded-[3.5rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
-              <div className="h-80 overflow-hidden relative grayscale group-hover:grayscale-0 transition-all duration-700">
+              <div className="h-80 overflow-hidden relative transition-all duration-700">
                 <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/90 dark:bg-brand-creme/80 backdrop-blur-md rounded-full text-[10px] font-black text-emerald-500 dark:text-emerald-500 uppercase tracking-widest">
                   {product.category}

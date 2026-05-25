@@ -110,7 +110,7 @@ export default function Regional() {
                   <img 
                     src={village.image} 
                     alt={village.name} 
-                    className="w-full h-[600px] object-cover rounded-[4rem] shadow-2xl relative z-10 filter grayscale hover:grayscale-0 transition-all duration-1000" 
+                    className="w-full h-[600px] object-cover rounded-[4rem] shadow-2xl relative z-10 transition-all duration-1000" 
                   />
                   <div className="absolute -bottom-8 -right-8 p-10 bg-white dark:bg-brand-creme rounded-[3rem] shadow-2xl z-20 border border-emerald-50 dark:border-stone-300 hidden md:block">
                     <div className="flex items-center gap-4">

@@ -100,7 +100,7 @@ export default function Profile() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-6">
-              <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600" className="rounded-3xl shadow-2xl w-full h-80 object-cover grayscale hover:grayscale-0 transition-all duration-700" alt="Sebatik History" />
+              <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600" className="rounded-3xl shadow-2xl w-full h-80 object-cover transition-all duration-700" alt="Sebatik History" />
               <div className="bg-emerald-50 dark:bg-emerald-300/30 rounded-3xl p-8 aspect-square flex items-center justify-center">
                 <Users size={48} className="text-emerald-500" />
               </div>

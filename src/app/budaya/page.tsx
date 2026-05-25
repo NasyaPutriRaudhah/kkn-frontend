@@ -57,7 +57,7 @@ export default function Culture() {
             <div className="absolute inset-x-0 bottom-0 top-1/2 bg-emerald-500 rounded-[3rem] -z-10 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-700" />
             <img 
               src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&q=80&w=800" 
-              className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-2xl relative z-10 filter grayscale hover:grayscale-0 transition-all duration-1000" 
+              className="w-full aspect-[4/5] object-cover rounded-[3rem] shadow-2xl relative z-10 transition-all duration-1000" 
               alt="Culture"
             />
             <div className="absolute -bottom-10 -left-10 p-10 bg-white dark:bg-brand-creme rounded-[2.5rem] shadow-2xl z-20 border border-emerald-50 dark:border-stone-300">

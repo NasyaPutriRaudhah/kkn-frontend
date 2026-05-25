@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, ExternalLink, Phone } from 'lucide-react';
+import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, ExternalLink, Phone, Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import StuntCheck from '../../components/StuntCheck';
 
@@ -54,6 +54,14 @@ const facilitiesData = {
 
 export default function Facilities() {
   const [activeTab, setActiveTab] = useState(categories[0].id);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const currentFacilities = facilitiesData[activeTab as keyof typeof facilitiesData];
+  const filtered = currentFacilities.filter(
+    (item) =>
+      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.loc.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="pt-32 pb-24 px-8 min-h-screen bg-stone-50 dark:bg-brand-creme">
@@ -73,8 +81,8 @@ export default function Facilities() {
           </p>
         </header>
 
-        {/* Categories Grid (Tabs) */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-20">
+        {/* Categories Tabs — horizontal scroll on mobile, grid on desktop */}
+        <div className="flex md:grid md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-thin [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-emerald-200 [&::-webkit-scrollbar-track]:bg-transparent">
           {categories.map((cat) => {
             const Icon = cat.icon;
             const isActive = activeTab === cat.id;
@@ -83,19 +91,31 @@ export default function Facilities() {
                 key={cat.id}
                 onClick={() => setActiveTab(cat.id)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-4 p-8 rounded-[3rem] transition-all duration-500 border",
+                  "flex flex-col items-center justify-center gap-4 p-6 md:p-8 rounded-[3rem] transition-all duration-500 border snap-start shrink-0 w-36 md:w-auto",
                   isActive 
-                    ? "bg-emerald-500 border-emerald-500 text-white shadow-2xl shadow-emerald-100 dark:shadow-none scale-105" 
+                    ? "bg-emerald-500 border-emerald-500 text-white shadow-2xl shadow-emerald-100 dark:shadow-none md:scale-105" 
                     : "bg-white dark:bg-brand-creme border-emerald-50 dark:border-stone-300 text-emerald-500 hover:border-emerald-300"
                 )}
               >
                 <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center transition-colors", isActive ? "bg-white/20" : "bg-emerald-50 dark:bg-emerald-300/30")}>
                   <Icon size={24} />
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest">{cat.label}</span>
+                <span className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">{cat.label}</span>
               </button>
             );
           })}
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-12 max-w-md">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
+          <input
+            type="text"
+            placeholder="Cari fasilitas..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3 rounded-2xl border border-emerald-100 dark:border-stone-300 bg-white dark:bg-brand-creme text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
+          />
         </div>
 
         {/* Content */}
@@ -109,12 +129,12 @@ export default function Facilities() {
               exit={{ opacity: 0, y: -20 }}
               className="contents"
             >
-              {facilitiesData[activeTab as keyof typeof facilitiesData].map((item, i) => (
+              {filtered.map((item, i) => (
                 <motion.div
                   key={item.title}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
                   className="group bg-white dark:bg-brand-creme rounded-[3.5rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="h-64 overflow-hidden relative">
@@ -148,6 +168,11 @@ export default function Facilities() {
                   </div>
                 </motion.div>
               ))}
+              {filtered.length === 0 && (
+                <div className="col-span-full text-center py-20 text-stone-400 text-sm">
+                  Tidak ada fasilitas ditemukan untuk pencarian &quot;{searchQuery}&quot;
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>
