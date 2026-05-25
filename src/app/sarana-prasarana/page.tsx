@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, Trophy, Activity, Bus, Church, MapPin } from 'lucide-react';
+import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, ExternalLink, Phone } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import StuntCheck from '../../components/StuntCheck';
 
@@ -16,25 +16,39 @@ const categories = [
 
 const facilitiesData = {
   pendidikan: [
-    { title: 'SMK Negeri 1 Sebatik Barat', desc: 'Pusat vokasi dengan keaslian jurusan kelautan dan agribisnis.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=600' },
-    { title: 'SMP Negeri 2 Sebatik Barat', desc: 'Sekolah menengah dengan standar fasilitas digital.', loc: 'Desa Setabu', img: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=600' },
-    { title: 'SD Negeri 001 Sebatik Barat', desc: 'Sekolah dasar unggulan di pusat kecamatan.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?auto=format&fit=crop&q=80&w=600' },
+    { title: 'SMK Negeri 1 Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/smkn1.png', mapsUrl: 'https://maps.app.goo.gl/gxMPGhRchhv8hWgD8' },
+    { title: 'SMP Negeri 1 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/smpn1.webp', mapsUrl: 'https://maps.app.goo.gl/bXxtKSi9ie6jDk7DA' },
+    { title: 'SMP Negeri 2 Sebatik Barat', loc: 'Desa liang Bunyu', img: '/assets/smpn02.png', mapsUrl: 'https://maps.app.goo.gl/53AfmJ8mmXemxDU16' },
+    { title: 'SD Negeri 001 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn001.webp', mapsUrl: 'https://maps.app.goo.gl/VRQztX5pCBuTx3Y76' },
+    { title: 'SD Negeri 002 Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sdn002.png', mapsUrl: 'https://maps.app.goo.gl/UTo8dcjHErXppxXx6' },
+    { title: 'SD Negeri 003 Sebatik Barat', loc: 'Desa Bambangan', img: '/assets/sdn003.png', mapsUrl: 'https://maps.app.goo.gl/eVr1ochDFEpcwnt37' },
+    { title: 'SD Negeri 004 Sebatik Barat', loc: 'Desa Binalawan', img: '/assets/sdn004.webp', mapsUrl: 'https://maps.app.goo.gl/ezHcjAAwTTzohTep8' },
+    { title: 'SD Negeri 005 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn005.webp', mapsUrl: 'https://maps.app.goo.gl/AN2LKXa9Kgx5K8bQA' },
+    { title: 'SD Negeri 006 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn006.webp', mapsUrl: 'https://maps.app.goo.gl/UiWKLmKthSpk88tq6' },
+    { title: 'SD Negeri 007 Sebatik Barat', loc: 'Desa Binalawan', img: '/assets/sdn007.jpg', mapsUrl: 'https://maps.app.goo.gl/SV1o1fUP3451sgdb7' },
+    { title: 'SD Swasta Insan Mulya Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sds insan.jpg', mapsUrl: 'https://maps.app.goo.gl/UiWKLmKthSpk88tq6' },
+    { title: 'Pesantren PERSIS Internasional Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/pesantren.png', mapsUrl: 'https://maps.app.goo.gl/ZqRFhK7erx2pzXEh8' },
+    { title: 'MA YIIPS Sebatik Barat', loc: 'Desa Setabu', img: '/assets/ma.png', mapsUrl: 'https://maps.app.goo.gl/fcQN9sfEgc7XWRPV6' },
+    { title: 'SD 001 Muhammadiyah Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sd muhammadiyah.png', mapsUrl: 'https://maps.app.goo.gl/9kVdLkUqSSrvXKSZA' },
+    
+    
   ],
   olahraga: [
-    { title: 'Stadion Mini Binalawan', desc: 'Fasilitas sepak bola dan atletik untuk turnamen antar desa.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1521537634581-0dced2fee2ef?auto=format&fit=crop&q=80&w=600' },
-    { title: 'GOR Bulutangkis Setabu', desc: 'Gedung olahraga indoor untuk bulutangkis dan futsal.', loc: 'Desa Setabu', img: 'https://images.unsplash.com/photo-1626248801379-335bedf90768?auto=format&fit=crop&q=80&w=600' },
+    { title: 'Lapangan Sepak Bola Liang Bunyu', loc: 'Desa Liang Bunyu', img: '/assets/sepak bola.jpg', mapsUrl: 'https://maps.app.goo.gl/NF8U7LidsN3E5hXT6' },
+    { title: 'Lapangan Bola Tembaring', loc: 'Desa Setabu', img: '/assets/tembaring.jpg', mapsUrl: 'https://maps.app.goo.gl/6d5RMkXdQ1KgxQMu7' },
+    { title: 'Lapangan Kampung Enrekang', loc: 'Desa Binalawan', img: '/assets/lap enrekang.png', mapsUrl: 'https://maps.app.goo.gl/E37u4EGyevvYFr9i7' },
   ],
   kesehatan: [
-    { title: 'Puskesmas Binalawan', desc: 'Pusat layanan kesehatan 24 jam dengan fasilitas rawat inap.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600' },
-    { title: 'Poskesdes Bambangan', desc: 'Pelayanan kesehatan dasar untuk masyarakat pedesaan.', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1538108197017-c1c46cbdd097?auto=format&fit=crop&q=80&w=600' },
+    { title: 'Puskesmas Binalawan', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600', mapsUrl: '', waUrl: 'https://wa.me/6281234567890' },
+    { title: 'Poskesdes Bambangan', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1538108197017-c1c46cbdd097?auto=format&fit=crop&q=80&w=600', mapsUrl: '', waUrl: '' },
   ],
   transportasi: [
-    { title: 'Dermaga Bambangan', desc: 'Pintu masuk utama via laut dari Kota Nunukan.', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1495470129215-6804cfd693bf?auto=format&fit=crop&q=80&w=600' },
-    { title: 'Terminal Angkutan Desa', desc: 'Pusat transportasi darat antar desa di wilayah kecamatan.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=600' },
+    { title: 'Dermaga Bambangan', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1495470129215-6804cfd693bf?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
+    { title: 'Terminal Angkutan Desa', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
   ],
   ibadah: [
-    { title: 'Masjid Jami Binalawan', desc: 'Masjid tertua dan terbesar di Kecamatan Sebatik Barat.', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600' },
-    { title: 'Gereja Paroki Liang Bunyu', desc: 'Tempat ibadah umat Kristiani yang bersejarah.', loc: 'Desa Liang Bunyu', img: 'https://images.unsplash.com/photo-1548625313-039e4402662c?auto=format&fit=crop&q=80&w=600' },
+    { title: 'Masjid Jami Binalawan', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
+    { title: 'Gereja Paroki Liang Bunyu', loc: 'Desa Liang Bunyu', img: 'https://images.unsplash.com/photo-1548625313-039e4402662c?auto=format&fit=crop&q=80&w=600', mapsUrl: '' },
   ],
 };
 
@@ -104,17 +118,33 @@ export default function Facilities() {
                   className="group bg-white dark:bg-brand-creme rounded-[3.5rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="h-64 overflow-hidden relative">
-                    <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 filter grayscale group-hover:grayscale-0" />
+                    <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                     <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/90 dark:bg-brand-creme/80 backdrop-blur-md rounded-full text-[10px] font-black text-emerald-500 dark:text-emerald-500 flex items-center gap-2 shadow-lg uppercase tracking-widest">
                       <MapPin size={12} /> {item.loc}
                     </div>
                   </div>
                   <div className="p-10">
-                    <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 mb-4 leading-none tracking-tight group-hover:text-emerald-500 transition-colors">{item.title}</h3>
-                    <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed mb-8 font-light italic">"{item.desc}"</p>
-                    <button className="text-emerald-500 font-black text-[10px] uppercase tracking-widest flex items-center gap-2 hover:translate-x-2 transition-transform">
-                      Informasi Lengkap
-                    </button>
+                    <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 mb-6 leading-none tracking-tight group-hover:text-emerald-500 transition-colors">{item.title}</h3>
+                    <div className="flex flex-wrap gap-4">
+                      <a
+                        href={item.mapsUrl || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest hover:translate-x-2 transition-transform"
+                      >
+                        <ExternalLink size={14} /> View in Google Maps
+                      </a>
+                      {(item as any).waUrl && (
+                        <a
+                          href={(item as any).waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest hover:translate-x-2 transition-transform"
+                        >
+                          <Phone size={14} /> Contact WA
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </motion.div>
               ))}

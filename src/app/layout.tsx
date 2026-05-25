@@ -21,6 +21,9 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
+        <script dangerouslySetInnerHTML={{
+          __html: `(function(){var o=new MutationObserver(function(m){m.forEach(function(n){if(n.type==='attributes'&&n.attributeName==='fdprocessedid')n.target.removeAttribute('fdprocessedid')})});o.observe(document.documentElement,{attributes:true,subtree:true,attributeFilter:['fdprocessedid']})})()`,
+        }} />
         <ThemeProvider>
           <ScrollToTop />
           <Navbar />

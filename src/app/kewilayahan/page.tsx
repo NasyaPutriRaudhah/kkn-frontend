@@ -9,33 +9,33 @@ const villages = [
     name: 'Desa Binalawan',
     tagline: 'Pusat Pemerintahan & Ekonomi',
     desc: 'Sebagai ibukota kecamatan, Binalawan menjadi pusat denyut nadi pemerintahan dan aktivitas komersial. Infrastruktur yang mapan menjadikannya desa percontohan digital.',
-    stats: { population: '6,420', area: '12.4', type: 'Perkotaan' },
+    stats: { population: '3,332', area: '18.99', type: 'Desa' },
     features: ['Pusat Perbelanjaan', 'Layanan Publik Terpadu', 'Akses Pendidikan Tinggi'],
-    image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&q=80&w=1000'
+    image: '/assets/binalawan.jpeg'
   },
   {
     name: 'Desa Liang Bunyu',
     tagline: 'Mutiara Pesisir & Perikanan',
     desc: 'Terkenal dengan garis pantainya yang indah dan komunitas nelayan yang tangguh. Liang Bunyu adalah produsen utama rumput laut dan hasil laut berkualitas tinggi.',
-    stats: { population: '4,150', area: '18.2', type: 'Pesisir' },
+    stats: { population: '3,424', area: '17.84', type: 'Desa' },
     features: ['Wisata Bahari', 'Sentra Rumput Laut', 'Kuliner Seafood'],
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&q=80&w=1000'
+    image: '/assets/Kantor_Desa_Liang_Bunyu,_Nunukan.jpg'
   },
   {
     name: 'Desa Setabu',
     tagline: 'Agribisnis & Perkebunan',
     desc: 'Bentang alam hijau yang mendominasi wilayah ini menjadikannya paru-paru Sebatik Barat. Komoditas kakao dan kelapa sawit menjadi tulang punggung ekonomi desa.',
-    stats: { population: '5,280', area: '28.1', type: 'Agraris' },
+    stats: { population: '4,471', area: '34.56', type: 'Desa' },
     features: ['Industri Kakao', 'Ekowisata Hutan', 'Produktivitas Pangan'],
-    image: 'https://images.unsplash.com/photo-1518104593124-ac2e82a5eb9d?auto=format&fit=crop&q=80&w=1000'
+    image: '/assets/Kantor_Desa_Setabu,_Nunukan.jpg'
   },
   {
     name: 'Desa Bambangan',
     tagline: 'Gerbang Transportasi & Logistik',
     desc: 'Lokasi Dermaga Bambangan menjadikannya titik konektivitas vital antara Pulau Sebatik dan Kabupaten Nunukan. Transformasi logistik menjadi fokus utama pembangunan.',
-    stats: { population: '2,600', area: '36.5', type: 'Logistik' },
+    stats: { population: '2,859', area: '21.88', type: 'Desa' },
     features: ['Pelabuhan Utama', 'Hub Pergudangan', 'Transit Wisata'],
-    image: 'https://images.unsplash.com/photo-1495470129215-6804cfd693bf?auto=format&fit=crop&q=80&w=1000'
+    image: '/assets/Kantor_Desa_Bambangan,_Nunukan.jpg'
   }
 ];
 
