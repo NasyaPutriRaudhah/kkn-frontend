@@ -1,6 +1,8 @@
 import { fetchStrapi, getMediaUrl, normalizeSingleEntry, normalizeCollectionEntries } from "../../lib/strapi";
 import type { StrapiSingleResponse, ProfilAttributes, StrukturOrganisasiAttributes } from "../../types/strapi";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ProfilePage() {
   let profil: (ProfilAttributes & { id: number }) | null = null;
   let struktur: Array<StrukturOrganisasiAttributes & { id: number }> = [];

@@ -2,6 +2,8 @@ import HomeClient from './home-client';
 import { fetchStrapiCollectionSafe } from '../lib/strapi';
 import type { KknProgramAttributes, NewsAttributes, TourismAttributes } from '../types/strapi';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [newsItems, tourismItems, kknItems] = await Promise.all([
     fetchStrapiCollectionSafe<NewsAttributes>(
