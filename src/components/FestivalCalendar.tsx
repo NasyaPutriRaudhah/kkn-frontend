@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, CalendarDays, X } from 'lucide-react';
+import { getStrapiUrl, normalizeCollectionEntries } from '../lib/strapi';
+import type { CalendarEventAttributes } from '../types/strapi';
 
 interface CalendarEvent {
   date: number;
@@ -32,13 +34,53 @@ export default function FestivalCalendar({ isOpen, onClose }: { isOpen: boolean;
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
+  const [allEvents, setAllEvents] = useState<CalendarEvent[]>(events);
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadCalendarEvents() {
+      try {
+        const res = await fetch(`${getStrapiUrl()}/api/calendar-events?pagination[pageSize]=200&sort=event_date:asc`);
+        if (!res.ok) return;
+
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<CalendarEventAttributes>(json.data);
+        const mapped = normalized
+          .map((entry) => {
+            if (!entry.event_date || !entry.title) return null;
+            const d = new Date(entry.event_date);
+            if (Number.isNaN(d.getTime())) return null;
+            return {
+              date: d.getDate(),
+              month: d.getMonth(),
+              year: d.getFullYear(),
+              title: entry.title,
+              desc: entry.description,
+              color: entry.color || 'bg-emerald-500',
+            } as CalendarEvent;
+          })
+          .filter(Boolean) as CalendarEvent[];
+
+        if (mounted && mapped.length > 0) {
+          setAllEvents(mapped);
+        }
+      } catch (error) {
+        console.error('Calendar events endpoint not ready, using fallback events.', error);
+      }
+    }
+
+    loadCalendarEvents();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
   const startDay = new Date(viewYear, viewMonth, 1).getDay();
 
   const monthEvents = useMemo(
-    () => events.filter(e => e.month === viewMonth && e.year === viewYear),
-    [viewMonth, viewYear]
+    () => allEvents.filter(e => e.month === viewMonth && e.year === viewYear),
+    [allEvents, viewMonth, viewYear]
   );
 
   const hasEvent = (day: number) => monthEvents.some(e => e.date === day);
@@ -55,12 +97,12 @@ export default function FestivalCalendar({ isOpen, onClose }: { isOpen: boolean;
   };
 
   const upcomingEvents = useMemo(
-    () => events
+    () => allEvents
       .map(e => ({ ...e, sort: new Date(e.year, e.month, e.date).getTime() }))
       .filter(e => e.sort >= today.getTime())
       .sort((a, b) => a.sort - b.sort)
       .slice(0, 5),
-    [today]
+    [allEvents, today]
   );
 
   const allDayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];

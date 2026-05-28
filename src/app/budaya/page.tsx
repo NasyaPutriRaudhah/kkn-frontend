@@ -1,40 +1,72 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Palette, Camera } from 'lucide-react';
-import { cn } from '../../lib/utils';
 import FestivalCalendar from '../../components/FestivalCalendar';
+import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { GalleryAttributes } from '../../types/strapi';
 
-const cultureData = [
-  { 
-    title: 'Tenun Sebatik', 
-    cat: 'Kriya & Busana', 
-    desc: 'Warisan kerajinan tangan dengan motif khas perbatasan yang memadukan corak melayu dan suku setempat.', 
-    img: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&q=80&w=800'
-  },
-  { 
-    title: 'Tari Jepin', 
-    cat: 'Seni Pertunjukan', 
-    desc: 'Tarian tradisional pesisir yang melambangkan kegembiraan dan ungkapan syukur masyarakat Sebatik.', 
-    img: 'https://images.unsplash.com/photo-1520110120185-bc3fcc293683?auto=format&fit=crop&q=80&w=800'
-  },
-  { 
-    title: 'Kuliner Pesisir', 
-    cat: 'Gastronomi', 
-    desc: 'Kekayaan rasa dari olahan hasil laut segar dengan rempah tradisional Kalimantan Utara.', 
-    img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=800'
-  },
-  { 
-    title: 'Rumah Adat', 
-    cat: 'Arsitektur', 
-    desc: 'Struktur bangunan panggung yang dipertahankan sebagai wujud kearifan lokal beradaptasi dengan lingkungan.', 
-    img: 'https://images.unsplash.com/photo-1518104593124-ac2e82a5eb9d?auto=format&fit=crop&q=80&w=800'
-  },
-];
+type CultureItem = {
+  id: number;
+  title: string;
+  cat: string;
+  img: string;
+  desc: string;
+};
 
 export default function Culture() {
   const [calendarOpen, setCalendarOpen] = useState(false);
+  const [items, setItems] = useState<CultureItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let mounted = true;
+    async function loadGallery() {
+      try {
+        setLoading(true);
+        const res = await fetch(`${getStrapiUrl()}/api/galleries?populate=images&pagination[pageSize]=50`);
+        if (!res.ok) throw new Error(`Failed to load galleries (${res.status})`);
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<GalleryAttributes>(json.data);
+
+        const mapped = normalized.flatMap((entry) => {
+          const images = entry.images || [];
+          if (images.length === 0) {
+            return [
+              {
+                id: entry.id,
+                title: entry.title || "Galeri",
+                cat: entry.category || "Budaya",
+                img: "",
+                desc: "Konten dokumentasi dari Strapi CMS.",
+              },
+            ];
+          }
+          return images.map((image, idx) => ({
+            id: Number(`${entry.id}${idx}`),
+            title: entry.title || "Galeri",
+            cat: entry.category || "Budaya",
+            img: getMediaUrl(image.url),
+            desc: "Konten dokumentasi dari Strapi CMS.",
+          }));
+        });
+
+        if (mounted) setItems(mapped);
+      } catch (err) {
+        if (mounted) setError(err instanceof Error ? err.message : "Unknown error");
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+    loadGallery();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const cultureData = useMemo(() => items, [items]);
 
   return (
     <div className="pt-32 pb-24 px-8 overflow-hidden bg-stone-50 dark:bg-brand-creme min-h-screen">
@@ -70,6 +102,8 @@ export default function Culture() {
 
         {/* Culture Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-48">
+          {loading && <p className="text-stone-500">Memuat data galeri...</p>}
+          {error && <p className="text-red-600">Gagal memuat galeri: {error}</p>}
           {cultureData.map((item, i) => (
             <motion.div
               key={item.title}
@@ -79,11 +113,15 @@ export default function Culture() {
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="group relative overflow-hidden rounded-[4rem] aspect-[4/5] shadow-sm hover:shadow-2xl transition-all duration-700"
             >
-              <img 
-                src={item.img} 
-                alt={item.title} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-              />
+              {item.img ? (
+                <img 
+                  src={item.img} 
+                  alt={item.title} 
+                  className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                />
+              ) : (
+                <div className="w-full h-full bg-stone-100 dark:bg-stone-200 flex items-center justify-center text-stone-400">No Image</div>
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-emerald-900/95 via-emerald-700/10 to-transparent p-12 flex flex-col justify-end">
                 <span className="text-emerald-300 font-black text-[10px] uppercase tracking-widest mb-6 block border-l-2 border-emerald-500 pl-4">{item.cat}</span>
                 <h3 className="text-4xl font-black text-white mb-6 leading-none tracking-tight">{item.title}</h3>
@@ -93,6 +131,9 @@ export default function Culture() {
               </div>
             </motion.div>
           ))}
+          {!loading && !error && cultureData.length === 0 && (
+            <p className="text-stone-500">Belum ada data galeri untuk ditampilkan.</p>
+          )}
         </div>
 
         {/* Event Banner */}

@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, ExternalLink, Phone, Search } from 'lucide-react';
+import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, Map, Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import StuntCheck from '../../components/StuntCheck';
+import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { FacilityAttributes } from '../../types/strapi';
 
 const categories = [
   { id: 'pendidikan', label: 'Pendidikan', icon: GraduationCap },
@@ -14,57 +16,67 @@ const categories = [
   { id: 'ibadah', label: 'Ibadah', icon: Church },
 ];
 
-const facilitiesData = {
-  pendidikan: [
-    { title: 'SMK Negeri 1 Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/smkn1.png', mapsUrl: 'https://maps.app.goo.gl/gxMPGhRchhv8hWgD8' },
-    { title: 'SMP Negeri 1 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/smpn1.webp', mapsUrl: 'https://maps.app.goo.gl/bXxtKSi9ie6jDk7DA' },
-    { title: 'SMP Negeri 2 Sebatik Barat', loc: 'Desa liang Bunyu', img: '/assets/smpn02.png', mapsUrl: 'https://maps.app.goo.gl/53AfmJ8mmXemxDU16' },
-    { title: 'SD Negeri 001 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn001.webp', mapsUrl: 'https://maps.app.goo.gl/VRQztX5pCBuTx3Y76' },
-    { title: 'SD Negeri 002 Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sdn002.png', mapsUrl: 'https://maps.app.goo.gl/UTo8dcjHErXppxXx6' },
-    { title: 'SD Negeri 003 Sebatik Barat', loc: 'Desa Bambangan', img: '/assets/sdn003.png', mapsUrl: 'https://maps.app.goo.gl/eVr1ochDFEpcwnt37' },
-    { title: 'SD Negeri 004 Sebatik Barat', loc: 'Desa Binalawan', img: '/assets/sdn004.webp', mapsUrl: 'https://maps.app.goo.gl/ezHcjAAwTTzohTep8' },
-    { title: 'SD Negeri 005 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn005.webp', mapsUrl: 'https://maps.app.goo.gl/AN2LKXa9Kgx5K8bQA' },
-    { title: 'SD Negeri 006 Sebatik Barat', loc: 'Desa Setabu', img: '/assets/sdn006.webp', mapsUrl: 'https://maps.app.goo.gl/UiWKLmKthSpk88tq6' },
-    { title: 'SD Negeri 007 Sebatik Barat', loc: 'Desa Binalawan', img: '/assets/sdn007.jpg', mapsUrl: 'https://maps.app.goo.gl/SV1o1fUP3451sgdb7' },
-    { title: 'SD Swasta Insan Mulya Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sds insan.jpg', mapsUrl: 'https://maps.app.goo.gl/UiWKLmKthSpk88tq6' },
-    { title: 'Pesantren PERSIS Internasional Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/pesantren.png', mapsUrl: 'https://maps.app.goo.gl/ZqRFhK7erx2pzXEh8' },
-    { title: 'MA YIIPS Sebatik Barat', loc: 'Desa Setabu', img: '/assets/ma.png', mapsUrl: 'https://maps.app.goo.gl/fcQN9sfEgc7XWRPV6' },
-    { title: 'SD 001 Muhammadiyah Sebatik Barat', loc: 'Desa Liang Bunyu', img: '/assets/sd muhammadiyah.png', mapsUrl: 'https://maps.app.goo.gl/9kVdLkUqSSrvXKSZA' },
-    
-    
-  ],
-  olahraga: [
-    { title: 'Lapangan Sepak Bola Liang Bunyu', loc: 'Desa Liang Bunyu', img: '/assets/sepak bola.jpg', mapsUrl: 'https://maps.app.goo.gl/NF8U7LidsN3E5hXT6' },
-    { title: 'Lapangan Bola Tembaring', loc: 'Desa Setabu', img: '/assets/tembaring.jpg', mapsUrl: 'https://maps.app.goo.gl/6d5RMkXdQ1KgxQMu7' },
-    { title: 'Lapangan Kampung Enrekang', loc: 'Desa Binalawan', img: '/assets/lap enrekang.png', mapsUrl: 'https://maps.app.goo.gl/E37u4EGyevvYFr9i7' },
-  ],
-  kesehatan: [
-    { title: 'Puskesmas Binalawan', loc: 'Desa Binalawan', img: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&q=80&w=600', mapsUrl: '', waUrl: 'https://wa.me/6281234567890' },
-    { title: 'Poskesdes Bambangan', loc: 'Desa Bambangan', img: 'https://images.unsplash.com/photo-1538108197017-c1c46cbdd097?auto=format&fit=crop&q=80&w=600', mapsUrl: '', waUrl: '' },
-  ],
-  transportasi: [
-    { title: 'Dermaga Feri Liang Bunyu', loc: 'Desa Liang Bunyu', img: '/assets/feri.jpeg', mapsUrl: 'https://maps.app.goo.gl/vmAt8wtsTixZjfSU8' },
-  ],
-  ibadah: [
-    { title: 'Masjid At Ataqwa', loc: 'Desa Setabu', img: '/assets/ataqwa.png', mapsUrl: 'https://maps.app.goo.gl/nnfaPjw4dVRvm8bu5' },
-    { title: 'Masjid Al-Mustaqim', loc: 'Desa Binalawan', img: '', mapsUrl: 'https://maps.app.goo.gl/LRtHGWbhPHvrxsQe6' },
-    { title: 'Masjid Darul Muslimin', loc: 'Desa Liang Bunyu', img: '/assets/muslimin.png', mapsUrl: 'https://maps.app.goo.gl/MLPQCEzo69KxZk9G7' },
-    { title: 'Gereja Sidang Jemaat Yesus', loc: 'Desa Liang Bunyu', img: '', mapsUrl: 'https://maps.app.goo.gl/fSRtdwydKEZKGuQw5' },
-    { title: 'St. Leonard Catholic Church', loc: 'Desa Liang Bunyu', img: '/assets/gereja.png', mapsUrl: 'https://maps.app.goo.gl/Et7FUSAh1xQYdYms8' },
-    { title: ' Pos Pelkes "Immanuel" Bambangan', loc: 'Desa Liang Bunyu', img: '/assets/gereja2.png', mapsUrl: 'https://maps.app.goo.gl/aH9nWiSw3b2yQ1Th9' },
-  ],
+type FacilityItem = {
+  id: number;
+  title: string;
+  loc: string;
+  img: string;
+  type: string;
+  desc: string;
+  mapsLink: string;
 };
 
 export default function Facilities() {
   const [activeTab, setActiveTab] = useState(categories[0].id);
   const [searchQuery, setSearchQuery] = useState('');
+  const [facilities, setFacilities] = useState<FacilityItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const currentFacilities = facilitiesData[activeTab as keyof typeof facilitiesData];
-  const filtered = currentFacilities.filter(
-    (item) =>
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.loc.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadFacilities() {
+      try {
+        setLoading(true);
+        const res = await fetch(`${getStrapiUrl()}/api/facilities?populate=image&pagination[pageSize]=200`);
+        if (!res.ok) throw new Error(`Failed to load facilities (${res.status})`);
+
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<FacilityAttributes>(json.data);
+        const mapped = normalized.map((item) => ({
+          id: item.id,
+          title: item.name || 'Tanpa Nama',
+          loc: item.desa_location || '-',
+          img: getMediaUrl(item.image?.url),
+          type: (item.type || '').toLowerCase(),
+          desc: item.description || '',
+          mapsLink: item.google_maps_link || '',
+        }));
+
+        if (mounted) setFacilities(mapped);
+      } catch (err) {
+        if (mounted) setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadFacilities();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const filtered = useMemo(() => {
+    return facilities
+      .filter((item) => item.type === activeTab)
+      .filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          item.loc.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+  }, [facilities, activeTab, searchQuery]);
 
   return (
     <div className="pt-32 pb-24 px-8 min-h-screen bg-stone-50 dark:bg-brand-creme">
@@ -123,6 +135,8 @@ export default function Facilities() {
 
         {/* Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {loading && <p className="col-span-full text-stone-500">Memuat data fasilitas...</p>}
+          {error && <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>}
           <AnimatePresence mode="wait">
             <motion.div
               layout
@@ -141,37 +155,34 @@ export default function Facilities() {
                   className="group bg-white dark:bg-brand-creme rounded-[3.5rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="h-64 overflow-hidden relative">
-                    <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    {item.img ? (
+                      <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    ) : (
+                      <div className="w-full h-full bg-stone-100 dark:bg-stone-200 flex items-center justify-center text-stone-400 text-sm">No Image</div>
+                    )}
                     <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/90 dark:bg-brand-creme/80 backdrop-blur-md rounded-full text-[10px] font-black text-emerald-500 dark:text-emerald-500 flex items-center gap-2 shadow-lg uppercase tracking-widest">
                       <MapPin size={12} /> {item.loc}
                     </div>
                   </div>
                   <div className="p-10">
                     <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 mb-6 leading-none tracking-tight group-hover:text-emerald-500 transition-colors">{item.title}</h3>
+                    {item.desc && <p className="text-sm text-stone-500 mb-6 line-clamp-3">{item.desc}</p>}
                     <div className="flex flex-wrap gap-4">
-                      <a
-                        href={item.mapsUrl || '#'}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest hover:translate-x-2 transition-transform"
-                      >
-                        <ExternalLink size={14} /> View in Google Maps
-                      </a>
-                      {(item as any).waUrl && (
+                      {item.mapsLink ? (
                         <a
-                          href={(item as any).waUrl}
+                          href={item.mapsLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest hover:translate-x-2 transition-transform"
+                          className="inline-flex items-center gap-2 px-5 py-3 bg-emerald-500 text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100"
                         >
-                          <Phone size={14} /> Contact WA
+                          <Map size={14} /> View in Google Maps
                         </a>
-                      )}
+                      ) : null}
                     </div>
                   </div>
                 </motion.div>
               ))}
-              {filtered.length === 0 && (
+              {!loading && !error && filtered.length === 0 && (
                 <div className="col-span-full text-center py-20 text-stone-400 text-sm">
                   Tidak ada fasilitas ditemukan untuk pencarian &quot;{searchQuery}&quot;
                 </div>

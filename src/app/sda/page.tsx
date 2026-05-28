@@ -1,17 +1,66 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { ResourceSectorAttributes } from '../../types/strapi';
 
-const sectors = [
+const fallbackSectors = [
   { id: 'perikanan', title: 'Sektor Perikanan', val: '45%', color: 'blue', desc: 'Produksi rumput laut dan ikan tangkap yang menjadi komoditas ekspor utama ke mancanegara.', icon: Waves },
   { id: 'perkebunan', title: 'Sektor Perkebunan', val: '30%', color: 'green', desc: 'Lahan sawit dan kakao yang produktif menyokong pertumbuhan ekonomi desa pedalaman.', icon: Leaf },
   { id: 'pariwisata', title: 'Sektor Pariwisata', val: '15%', color: 'orange', desc: 'Keindahan pantai dan hutan mangrove yang mulai dikembangkan secara profesional.', icon: Landmark },
   { id: 'energi', title: 'Potensi Energi', val: '10%', color: 'amber', desc: 'Pengembangan energi baru terbarukan berbasis tenaga surya di wilayah pesisir.', icon: Zap },
 ];
 
+const iconByCode: Record<string, any> = {
+  perikanan: Waves,
+  perkebunan: Leaf,
+  pariwisata: Landmark,
+  energi: Zap,
+};
+
 export default function Resources() {
+  const [sectors, setSectors] = useState(fallbackSectors);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadSectors() {
+      try {
+        const res = await fetch(`${getStrapiUrl()}/api/resource-sectors?pagination[pageSize]=20`);
+        if (!res.ok) return;
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<ResourceSectorAttributes>(json.data);
+        const mapped = normalized
+          .map((entry) => {
+            if (!entry.code || !entry.title) return null;
+            return {
+              id: entry.code,
+              title: entry.title,
+              val: entry.value || '-',
+              color: entry.color || 'green',
+              desc: entry.description || '-',
+              icon: iconByCode[entry.code] || Landmark,
+            };
+          })
+          .filter(Boolean) as typeof fallbackSectors;
+
+        if (mounted && mapped.length > 0) {
+          setSectors(mapped);
+        }
+      } catch (error) {
+        console.error('Resource sectors endpoint not ready, using fallback data.', error);
+      }
+    }
+
+    loadSectors();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="pt-32 pb-24 px-8 overflow-hidden bg-stone-50 dark:bg-brand-creme">
       <div className="max-w-7xl mx-auto">

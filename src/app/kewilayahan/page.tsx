@@ -1,10 +1,13 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Users, LandPlot, Waves, Navigation } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { VillageAttributes } from '../../types/strapi';
 
-const villages = [
+const fallbackVillages = [
   {
     name: 'Desa Binalawan',
     tagline: 'Pusat Pemerintahan & Ekonomi',
@@ -39,7 +42,60 @@ const villages = [
   }
 ];
 
+type VillageUI = {
+  name: string;
+  tagline: string;
+  desc: string;
+  stats: { population: string; area: string; type: string };
+  features: string[];
+  image: string;
+};
+
 export default function Regional() {
+  const [villages, setVillages] = useState<VillageUI[]>(fallbackVillages);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadVillages() {
+      try {
+        const res = await fetch(`${getStrapiUrl()}/api/villages?populate=image&pagination[pageSize]=50`);
+        if (!res.ok) return;
+
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<VillageAttributes>(json.data);
+        const mapped = normalized
+          .map((entry) => {
+            if (!entry.name) return null;
+            return {
+              name: entry.name,
+              tagline: entry.tagline || 'Desa Sebatik Barat',
+              desc: entry.description || '-',
+              stats: {
+                population: entry.population || '-',
+                area: entry.area || '-',
+                type: entry.geo_type || 'Desa',
+              },
+              features: (entry.features || '').split(',').map((x) => x.trim()).filter(Boolean),
+              image: getMediaUrl(entry.image?.url),
+            } as VillageUI;
+          })
+          .filter(Boolean) as VillageUI[];
+
+        if (mounted && mapped.length > 0) {
+          setVillages(mapped);
+        }
+      } catch (error) {
+        console.error('Villages endpoint not ready, using fallback data.', error);
+      }
+    }
+
+    loadVillages();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
       <div className="max-w-7xl mx-auto">

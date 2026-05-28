@@ -2,30 +2,67 @@
 
 import { motion } from 'motion/react';
 import { ShoppingBag, Phone, Search } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { cn } from '../../lib/utils';
+import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { UmkmAttributes } from '../../types/strapi';
 
-const products = [
-  { id: 1, name: 'Kerupuk Rumput Laut', category: 'Makanan', price: 'Rp 15.000', shop: 'UKM Bahari Sejahtera', img: 'https://images.unsplash.com/photo-1610970882739-a69c10664ee5?auto=format&fit=crop&q=80&w=600' },
-  { id: 2, name: 'Kain Tenun Sebatik', category: 'Kerajinan', price: 'Rp 350.000', shop: 'Tenun Melayu Indah', img: 'https://images.unsplash.com/photo-1590736704728-f4730bb30770?auto=format&fit=crop&q=80&w=600' },
-  { id: 3, name: 'Sambal Cumi Bambangan', category: 'Makanan', price: 'Rp 25.000', shop: 'Dapur Pesisir', img: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&q=80&w=600' },
-  { id: 4, name: 'Miniatur Kapal Pinisi', category: 'Souvenir', price: 'Rp 125.000', shop: 'Kreatif Bambangan', img: 'https://images.unsplash.com/photo-1605745341112-85968b193ef5?auto=format&fit=crop&q=80&w=600' },
-  { id: 5, name: 'Kopi Robusta Setabu', category: 'Minuman', price: 'Rp 45.000', shop: 'Kopi Lereng Sebatik', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=600' },
-  { id: 6, name: 'Tas Anyaman Lontar', category: 'Kerajinan', price: 'Rp 85.000', shop: 'Anyaman Mandiri', img: 'https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&q=80&w=600' },
-];
+type UmkmItem = UmkmAttributes & { id: number; imageUrl: string };
 
 export default function UMKM() {
   const [filter, setFilter] = useState('Semua');
   const [search, setSearch] = useState('');
-  
-  const filteredProducts = products.filter(p => {
-    const matchesCategory = filter === 'Semua' || p.category === filter;
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.shop.toLowerCase().includes(search.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const [items, setItems] = useState<UmkmItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const categories = ['Semua', 'Makanan', 'Minuman', 'Kerajinan', 'Souvenir'];
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadUmkm() {
+      try {
+        setLoading(true);
+        const res = await fetch(`${getStrapiUrl()}/api/umkms?populate=image&pagination[pageSize]=100`);
+        if (!res.ok) throw new Error(`Failed to load UMKM (${res.status})`);
+
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<UmkmAttributes>(json.data);
+        const mapped = normalized.map((item) => ({
+          id: item.id,
+          name: item.name || 'UMKM',
+          ...item,
+          imageUrl: getMediaUrl(item.image?.url),
+        }));
+        if (mounted) setItems(mapped);
+      } catch (err) {
+        if (mounted) setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    loadUmkm();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const categories = useMemo(() => {
+    const fromData = Array.from(new Set(items.map((item) => item.category).filter(Boolean))) as string[];
+    return ['Semua', ...fromData];
+  }, [items]);
+
+  const filteredProducts = useMemo(() => {
+    return items.filter((item) => {
+      const matchesCategory = filter === 'Semua' || item.category === filter;
+      const query = search.toLowerCase();
+      const matchesSearch =
+        (item.name || '').toLowerCase().includes(query) ||
+        (item.location || '').toLowerCase().includes(query) ||
+        (item.description || '').toLowerCase().includes(query);
+      return matchesCategory && matchesSearch;
+    });
+  }, [filter, search, items]);
 
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
@@ -42,7 +79,7 @@ export default function UMKM() {
               </motion.div>
               <h1 className="text-6xl md:text-8xl font-black text-emerald-900 dark:text-stone-900 mb-8 tracking-tighter">Etalase UMKM.</h1>
               <p className="text-stone-500 dark:text-stone-600 max-w-xl text-xl font-light">
-                Mendorong akselerasi produk lokal melalui digitalisasi pasar untuk kesejahteraan warga perbatasan.
+                Data UMKM ditampilkan langsung dari Strapi CMS.
               </p>
             </div>
             <div className="flex bg-white dark:bg-brand-creme p-2 rounded-[2rem] border border-emerald-50 dark:border-stone-300 w-full md:w-auto shadow-sm">
@@ -78,6 +115,8 @@ export default function UMKM() {
 
         {/* Product Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+          {loading && <p className="col-span-full text-stone-500">Memuat data UMKM...</p>}
+          {error && <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>}
           {filteredProducts.map((product, i) => (
             <motion.div
               key={product.id}
@@ -88,32 +127,49 @@ export default function UMKM() {
               className="group bg-white dark:bg-brand-creme rounded-[3.5rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
               <div className="h-80 overflow-hidden relative transition-all duration-700">
-                <img src={product.img} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/90 dark:bg-brand-creme/80 backdrop-blur-md rounded-full text-[10px] font-black text-emerald-500 dark:text-emerald-500 uppercase tracking-widest">
-                  {product.category}
-                </div>
+                {product.imageUrl ? (
+                  <img src={product.imageUrl} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                ) : (
+                  <div className="w-full h-full bg-stone-100 dark:bg-stone-200 flex items-center justify-center text-stone-400 text-sm">No Image</div>
+                )}
+                {product.category && (
+                  <div className="absolute bottom-6 left-6 px-4 py-2 bg-white/90 dark:bg-brand-creme/80 backdrop-blur-md rounded-full text-[10px] font-black text-emerald-500 dark:text-emerald-500 uppercase tracking-widest">
+                    {product.category}
+                  </div>
+                )}
               </div>
               <div className="p-10">
                 <div className="flex flex-col gap-2 mb-6">
                   <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 leading-none tracking-tight group-hover:text-emerald-500 transition-colors">
                     {product.name}
                   </h3>
-                  <span className="text-emerald-500 font-black text-xl">{product.price}</span>
+                  {product.location && <span className="text-stone-500 text-sm">{product.location}</span>}
                 </div>
+                {product.description && <p className="text-sm text-stone-500 mb-6 line-clamp-3">{product.description}</p>}
                 <div className="flex items-center gap-3 text-stone-400 text-xs mb-10 font-bold uppercase tracking-wider">
                   <div className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-300/30 flex items-center justify-center text-emerald-500">
                     <ShoppingBag size={12} />
                   </div>
-                  {product.shop}
+                  UMKM Lokal
                 </div>
                 <div className="grid grid-cols-1 gap-4">
-                  <button className="flex items-center justify-center gap-3 py-4 bg-emerald-500 text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100">
-                    <Phone size={14} /> Pesan Sekarang
-                  </button>
+                  {product.contact ? (
+                    <a
+                      href={product.contact.startsWith('http') ? product.contact : `https://wa.me/${product.contact.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-3 py-4 bg-emerald-500 text-white rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest hover:bg-emerald-600 transition-all shadow-lg shadow-emerald-100"
+                    >
+                      <Phone size={14} /> Hubungi
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </motion.div>
           ))}
+          {!loading && !error && filteredProducts.length === 0 && (
+            <p className="col-span-full text-stone-500">Belum ada data UMKM yang cocok.</p>
+          )}
         </div>
       </div>
     </div>
