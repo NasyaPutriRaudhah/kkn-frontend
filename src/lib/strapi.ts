@@ -50,7 +50,7 @@ export async function fetchStrapi<T>(path: string, init?: RequestInit): Promise<
       "Content-Type": "application/json",
       ...(init?.headers || {}),
     },
-    next: { revalidate: 300 },
+    cache: 'no-store',
   });
 
   if (!res.ok) {
