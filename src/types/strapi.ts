@@ -118,6 +118,13 @@ export type ResourceSectorAttributes = {
   description?: string;
 };
 
+export type MangroveAttributes = {
+  jenis: string;
+  foto?: StrapiMedia | null;
+  ciri_ciri?: string;
+  potensi_pemanfaatan?: string;
+};
+
 export type CalendarEventAttributes = {
   title: string;
   description?: string;

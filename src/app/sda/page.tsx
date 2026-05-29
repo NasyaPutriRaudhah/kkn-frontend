@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight } from 'lucide-react';
+import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight, TreePine, Eye, Lightbulb } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { normalizeCollectionEntries } from '../../lib/strapi';
-import type { ResourceSectorAttributes } from '../../types/strapi';
+import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import type { ResourceSectorAttributes, MangroveAttributes } from '../../types/strapi';
 
 const fallbackSectors = [
   { id: 'perikanan', title: 'Sektor Perikanan', val: '45%', color: 'blue', desc: 'Produksi rumput laut dan ikan tangkap yang menjadi komoditas ekspor utama ke mancanegara.', icon: Waves },
@@ -21,11 +21,28 @@ const iconByCode: Record<string, any> = {
   energi: Zap,
 };
 
+type MangroveItem = MangroveAttributes & { id: number };
+
 export default function Resources() {
   const [sectors, setSectors] = useState(fallbackSectors);
+  const [mangroves, setMangroves] = useState<MangroveItem[]>([]);
 
   useEffect(() => {
     let mounted = true;
+
+    async function loadMangroves() {
+      try {
+        const res = await fetch(`/api/strapi/mangroves?populate=foto&pagination[pageSize]=50`);
+        if (!res.ok) return;
+        const json = await res.json();
+        const normalized = normalizeCollectionEntries<MangroveAttributes>(json.data);
+        if (mounted) setMangroves(normalized);
+      } catch (error) {
+        console.error('Mangrove endpoint not ready', error);
+      }
+    }
+
+    loadMangroves();
 
     async function loadSectors() {
       try {
@@ -182,6 +199,78 @@ export default function Resources() {
                 </div>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Mangrove Section */}
+        <section className="mb-32">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-block px-4 py-1 bg-emerald-50 dark:bg-emerald-300/30 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-100"
+            >
+              Ekosistem Pesisir
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4">
+              Get To Know <span className="text-emerald-500">Mangrove</span> in Sebatik
+            </h2>
+            <p className="text-stone-500 dark:text-stone-600 max-w-2xl mx-auto">
+              Hutan mangrove Sebatik Barat adalah paru-paru pesisir yang menyimpan keanekaragaman hayati luar biasa.
+            </p>
+          </div>
+
+          {mangroves.length === 0 && (
+            <p className="text-stone-500 text-center">Belum ada data mangrove. Isi melalui Strapi CMS.</p>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {mangroves.map((item, i) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: i * 0.1 }}
+                className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
+              >
+                {item.foto?.url && (
+                  <div className="h-64 overflow-hidden">
+                    <img
+                      src={getMediaUrl(item.foto.url)}
+                      alt={item.jenis}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                )}
+                <div className="p-10 space-y-6">
+                  <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
+                    <TreePine size={24} className="text-emerald-500 shrink-0" />
+                    {item.jenis}
+                  </h3>
+                  {item.ciri_ciri && (
+                    <div>
+                      <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                        <Eye size={14} /> Ciri-ciri
+                      </div>
+                      <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                        {item.ciri_ciri}
+                      </p>
+                    </div>
+                  )}
+                  {item.potensi_pemanfaatan && (
+                    <div>
+                      <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                        <Lightbulb size={14} /> Potensi Pemanfaatan
+                      </div>
+                      <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                        {item.potensi_pemanfaatan}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
           </div>
         </section>
       </div>
