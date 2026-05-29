@@ -22,6 +22,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'elegant-chickens-74f5f51b71.media.strapiapp.com',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
 };
