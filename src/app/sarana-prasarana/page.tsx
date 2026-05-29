@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, Map, Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import StuntCheck from '../../components/StuntCheck';
-import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
 import type { FacilityAttributes } from '../../types/strapi';
 
 const categories = [
@@ -39,7 +39,7 @@ export default function Facilities() {
     async function loadFacilities() {
       try {
         setLoading(true);
-        const res = await fetch(`${getStrapiUrl()}/api/facilities?populate=image&pagination[pageSize]=200`);
+        const res = await fetch(`/api/strapi/facilities?populate=image&pagination[pageSize]=200`);
         if (!res.ok) throw new Error(`Failed to load facilities (${res.status})`);
 
         const json = await res.json();

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import { normalizeCollectionEntries } from '../../lib/strapi';
 import type { ResourceSectorAttributes } from '../../types/strapi';
 
 const fallbackSectors = [
@@ -29,7 +29,7 @@ export default function Resources() {
 
     async function loadSectors() {
       try {
-        const res = await fetch(`${getStrapiUrl()}/api/resource-sectors?pagination[pageSize]=20`);
+        const res = await fetch(`/api/strapi/resource-sectors?pagination[pageSize]=20`);
         if (!res.ok) return;
         const json = await res.json();
         const normalized = normalizeCollectionEntries<ResourceSectorAttributes>(json.data);

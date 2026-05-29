@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Phone, Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { cn } from '../../lib/utils';
-import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
 import type { UmkmAttributes } from '../../types/strapi';
 
 type UmkmItem = UmkmAttributes & { id: number; imageUrl: string };
@@ -22,7 +22,7 @@ export default function UMKM() {
     async function loadUmkm() {
       try {
         setLoading(true);
-        const res = await fetch(`${getStrapiUrl()}/api/umkms?populate=image&pagination[pageSize]=100`);
+        const res = await fetch(`/api/strapi/umkms?populate=image&pagination[pageSize]=100`);
         if (!res.ok) throw new Error(`Failed to load UMKM (${res.status})`);
 
         const json = await res.json();

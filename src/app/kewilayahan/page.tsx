@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Users, LandPlot, Waves, Navigation } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
 import type { VillageAttributes } from '../../types/strapi';
 
 const fallbackVillages = [
@@ -59,7 +59,7 @@ export default function Regional() {
 
     async function loadVillages() {
       try {
-        const res = await fetch(`${getStrapiUrl()}/api/villages?populate=image&pagination[pageSize]=50`);
+        const res = await fetch(`/api/strapi/villages?populate=image&pagination[pageSize]=50`);
         if (!res.ok) return;
 
         const json = await res.json();

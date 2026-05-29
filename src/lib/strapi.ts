@@ -43,6 +43,19 @@ export async function fetchStrapiCollectionSafe<T extends Record<string, unknown
   }
 }
 
+export function getStrapiProxyPath(path: string) {
+  return `/api/strapi${path}`;
+}
+
+export async function fetchStrapiClient<T>(path: string): Promise<T> {
+  const res = await fetch(getStrapiProxyPath(path), { cache: 'no-store' });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Strapi proxy request failed (${res.status}): ${text}`);
+  }
+  return res.json() as Promise<T>;
+}
+
 export async function fetchStrapi<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${getStrapiUrl()}${path}`, {
     ...init,

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, CalendarDays, X } from 'lucide-react';
-import { getStrapiUrl, normalizeCollectionEntries } from '../lib/strapi';
+import { normalizeCollectionEntries } from '../lib/strapi';
 import type { CalendarEventAttributes } from '../types/strapi';
 
 interface CalendarEvent {
@@ -40,7 +40,7 @@ export default function FestivalCalendar({ isOpen, onClose }: { isOpen: boolean;
     let mounted = true;
     async function loadCalendarEvents() {
       try {
-        const res = await fetch(`${getStrapiUrl()}/api/calendar-events?pagination[pageSize]=200&sort=event_date:asc`);
+        const res = await fetch(`/api/strapi/calendar-events?pagination[pageSize]=200&sort=event_date:asc`);
         if (!res.ok) return;
 
         const json = await res.json();

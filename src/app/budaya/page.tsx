@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Palette, Camera } from 'lucide-react';
 import FestivalCalendar from '../../components/FestivalCalendar';
-import { getMediaUrl, getStrapiUrl, normalizeCollectionEntries } from '../../lib/strapi';
+import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
 import type { GalleryAttributes } from '../../types/strapi';
 
 type CultureItem = {
@@ -26,7 +26,7 @@ export default function Culture() {
     async function loadGallery() {
       try {
         setLoading(true);
-        const res = await fetch(`${getStrapiUrl()}/api/galleries?populate=images&pagination[pageSize]=50`);
+        const res = await fetch(`/api/strapi/galleries?populate=images&pagination[pageSize]=50`);
         if (!res.ok) throw new Error(`Failed to load galleries (${res.status})`);
         const json = await res.json();
         const normalized = normalizeCollectionEntries<GalleryAttributes>(json.data);
