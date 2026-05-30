@@ -16,6 +16,7 @@ const navLinks = [
   { name: 'UMKM', href: '/umkm' },
   { name: 'SDA', href: '/sda' },
   { name: 'Budaya', href: '/budaya' },
+  { name: 'Dokumen Desa', href: '/dokumen-desa' },
 ];
 
 export default function Navbar() {

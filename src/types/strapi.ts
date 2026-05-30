@@ -131,3 +131,8 @@ export type CalendarEventAttributes = {
   event_date: string;
   color?: string;
 };
+
+export type DokumenDesaAttributes = {
+  nama_dokumen: string;
+  file?: StrapiMedia | null;
+};
