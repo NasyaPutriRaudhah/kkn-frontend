@@ -4,9 +4,9 @@ import { motion } from 'motion/react';
 import { FileText, ExternalLink, FileSpreadsheet, FileImage, File } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { DokumenDesaAttributes } from '../../types/strapi';
+import type { ProdukHukumAttributes } from '../../types/strapi';
 
-type DokumenItem = DokumenDesaAttributes & { id: number };
+type ProdukHukumItem = ProdukHukumAttributes & { id: number };
 
 function getFileIcon(url: string) {
   if (!url) return File;
@@ -17,8 +17,8 @@ function getFileIcon(url: string) {
   return File;
 }
 
-export default function DokumenDesa() {
-  const [documents, setDocuments] = useState<DokumenItem[]>([]);
+export default function ProdukHukum() {
+  const [documents, setDocuments] = useState<ProdukHukumItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -28,10 +28,10 @@ export default function DokumenDesa() {
     async function loadDocuments() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/strapi/dokumen-desas?populate=file&pagination[pageSize]=100`);
+        const res = await fetch(`/api/strapi/produk-hukums?populate=file&pagination[pageSize]=100`);
         if (!res.ok) throw new Error(`Failed to load documents (${res.status})`);
         const json = await res.json();
-        const normalized = normalizeCollectionEntries<DokumenDesaAttributes>(json.data);
+        const normalized = normalizeCollectionEntries<ProdukHukumAttributes>(json.data);
         if (mounted) setDocuments(normalized);
       } catch (err) {
         if (mounted) setError(err instanceof Error ? err.message : 'Unknown error');
@@ -56,10 +56,10 @@ export default function DokumenDesa() {
             Arsip Digital
           </motion.div>
           <h1 className="text-6xl md:text-8xl font-black text-emerald-900 dark:text-stone-900 mb-8 tracking-tighter leading-none">
-            Explore <br />Dokumen Desa.
+            Explore <br />Produk Hukum.
           </h1>
           <p className="text-stone-500 dark:text-stone-600 max-w-xl text-xl font-light">
-            Dokumen-dokumen desa yang telah didigitalisasi untuk memudahkan akses informasi.
+            Produk-produk hukum yang telah didigitalisasi untuk memudahkan akses informasi.
           </p>
         </header>
 

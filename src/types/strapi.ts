@@ -132,7 +132,7 @@ export type CalendarEventAttributes = {
   color?: string;
 };
 
-export type DokumenDesaAttributes = {
+export type ProdukHukumAttributes = {
   nama_dokumen: string;
   file?: StrapiMedia | null;
 };
