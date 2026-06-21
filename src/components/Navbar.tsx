@@ -35,6 +35,8 @@ export default function Navbar() {
     setIsOpen(false);
   }, [pathname]);
 
+  if (pathname.startsWith('/studio')) return null;
+
   return (
     <nav
       className={cn(
