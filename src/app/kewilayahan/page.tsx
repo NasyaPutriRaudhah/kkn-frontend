@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { MapPin, Users, LandPlot, Waves, Navigation } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { VillageAttributes } from '../../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { villagesQuery } from '~/sanity/lib/queries';
+import type { SanityVillage } from '@/types/sanity';
 
 const fallbackVillages = [
   {
@@ -59,12 +60,8 @@ export default function Regional() {
 
     async function loadVillages() {
       try {
-        const res = await fetch(`/api/strapi/villages?populate=image&pagination[pageSize]=50`);
-        if (!res.ok) return;
-
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<VillageAttributes>(json.data);
-        const mapped = normalized
+        const data = await sanityFetch<SanityVillage[]>(villagesQuery);
+        const mapped = (data || [])
           .map((entry) => {
             if (!entry.name) return null;
             return {
@@ -74,10 +71,10 @@ export default function Regional() {
               stats: {
                 population: entry.population || '-',
                 area: entry.area || '-',
-                type: entry.geo_type || 'Desa',
+                type: entry.geoType || 'Desa',
               },
               features: (entry.features || '').split(',').map((x) => x.trim()).filter(Boolean),
-              image: getMediaUrl(entry.image?.url),
+              image: entry.imageUrl || '',
             } as VillageUI;
           })
           .filter(Boolean) as VillageUI[];

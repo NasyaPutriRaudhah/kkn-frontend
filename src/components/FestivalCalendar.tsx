@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ChevronLeft, ChevronRight, CalendarDays, X } from 'lucide-react';
-import { normalizeCollectionEntries } from '../lib/strapi';
-import type { CalendarEventAttributes } from '../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { calendarEventsQuery } from '~/sanity/lib/queries';
+import type { SanityCalendarEvent } from '@/types/sanity';
 
 interface CalendarEvent {
   date: number;
@@ -40,15 +41,11 @@ export default function FestivalCalendar({ isOpen, onClose }: { isOpen: boolean;
     let mounted = true;
     async function loadCalendarEvents() {
       try {
-        const res = await fetch(`/api/strapi/calendar-events?pagination[pageSize]=200&sort=event_date:asc`);
-        if (!res.ok) return;
-
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<CalendarEventAttributes>(json.data);
-        const mapped = normalized
+        const data = await sanityFetch<SanityCalendarEvent[]>(calendarEventsQuery);
+        const mapped = (data || [])
           .map((entry) => {
-            if (!entry.event_date || !entry.title) return null;
-            const d = new Date(entry.event_date);
+            if (!entry.eventDate || !entry.title) return null;
+            const d = new Date(entry.eventDate);
             if (Number.isNaN(d.getTime())) return null;
             return {
               date: d.getDate(),

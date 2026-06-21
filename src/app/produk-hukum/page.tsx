@@ -3,10 +3,9 @@
 import { motion } from 'motion/react';
 import { FileText, ExternalLink, FileSpreadsheet, FileImage, File } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { ProdukHukumAttributes } from '../../types/strapi';
-
-type ProdukHukumItem = ProdukHukumAttributes & { id: number };
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { produkHukumQuery } from '~/sanity/lib/queries';
+import type { SanityProdukHukum } from '@/types/sanity';
 
 function getFileIcon(url: string) {
   if (!url) return File;
@@ -18,7 +17,7 @@ function getFileIcon(url: string) {
 }
 
 export default function ProdukHukum() {
-  const [documents, setDocuments] = useState<ProdukHukumItem[]>([]);
+  const [documents, setDocuments] = useState<SanityProdukHukum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -28,11 +27,8 @@ export default function ProdukHukum() {
     async function loadDocuments() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/strapi/produk-hukums?populate=file&pagination[pageSize]=100`);
-        if (!res.ok) throw new Error(`Failed to load documents (${res.status})`);
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<ProdukHukumAttributes>(json.data);
-        if (mounted) setDocuments(normalized);
+        const data = await sanityFetch<SanityProdukHukum[]>(produkHukumQuery);
+        if (mounted) setDocuments(data || []);
       } catch (err) {
         if (mounted) setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -71,11 +67,11 @@ export default function ProdukHukum() {
             <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>
           )}
           {documents.map((doc, i) => {
-            const fileUrl = doc.file?.url ? getMediaUrl(doc.file.url) : null;
+            const fileUrl = doc.fileUrl || null;
             const Icon = fileUrl ? getFileIcon(fileUrl) : File;
             return (
               <motion.div
-                key={doc.id}
+                key={doc._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: i * 0.05 }}
@@ -93,7 +89,7 @@ export default function ProdukHukum() {
                     </div>
                     <div className="flex items-center justify-between gap-4">
                       <h3 className="text-xl font-black text-emerald-900 dark:text-stone-900 leading-tight tracking-tight group-hover:text-emerald-500 transition-colors">
-                        {doc.nama_dokumen}
+                      {doc.namaDokumen}
                       </h3>
                       <ExternalLink size={20} className="text-emerald-500 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
@@ -104,7 +100,7 @@ export default function ProdukHukum() {
                       <File size={32} />
                     </div>
                     <h3 className="text-xl font-black text-emerald-900 dark:text-stone-900 leading-tight tracking-tight">
-                      {doc.nama_dokumen}
+                      {doc.namaDokumen}
                     </h3>
                     <p className="text-stone-400 text-sm mt-2">File belum diunggah</p>
                   </div>

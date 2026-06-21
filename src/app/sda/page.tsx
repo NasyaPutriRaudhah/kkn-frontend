@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { motion } from 'motion/react';
 import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight, TreePine, Eye, Lightbulb, BookOpen } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { ResourceSectorAttributes, MangroveAttributes } from '../../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { mangrovesQuery, resourceSectorsQuery } from '~/sanity/lib/queries';
+import type { SanityMangrove, SanityResourceSector } from '@/types/sanity';
 
 const fallbackSectors = [
   { id: 'perikanan', title: 'Sektor Perikanan', val: '45%', color: 'blue', desc: 'Produksi rumput laut dan ikan tangkap yang menjadi komoditas ekspor utama ke mancanegara.', icon: Waves },
@@ -22,22 +23,17 @@ const iconByCode: Record<string, any> = {
   energi: Zap,
 };
 
-type MangroveItem = MangroveAttributes & { id: number };
-
 export default function Resources() {
   const [sectors, setSectors] = useState(fallbackSectors);
-  const [mangroves, setMangroves] = useState<MangroveItem[]>([]);
+  const [mangroves, setMangroves] = useState<SanityMangrove[]>([]);
 
   useEffect(() => {
     let mounted = true;
 
     async function loadMangroves() {
       try {
-        const res = await fetch(`/api/strapi/mangroves?populate=foto&pagination[pageSize]=50`);
-        if (!res.ok) return;
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<MangroveAttributes>(json.data);
-        if (mounted) setMangroves(normalized);
+        const data = await sanityFetch<SanityMangrove[]>(mangrovesQuery);
+        if (mounted) setMangroves(data || []);
       } catch (error) {
         console.error('Mangrove endpoint not ready', error);
       }
@@ -47,11 +43,8 @@ export default function Resources() {
 
     async function loadSectors() {
       try {
-        const res = await fetch(`/api/strapi/resource-sectors?pagination[pageSize]=20`);
-        if (!res.ok) return;
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<ResourceSectorAttributes>(json.data);
-        const mapped = normalized
+        const data = await sanityFetch<SanityResourceSector[]>(resourceSectorsQuery);
+        const mapped = (data || [])
           .map((entry) => {
             if (!entry.code || !entry.title) return null;
             return {
@@ -222,23 +215,23 @@ export default function Resources() {
           </div>
 
           {mangroves.length === 0 && (
-            <p className="text-stone-500 text-center">Belum ada data mangrove. Isi melalui Strapi CMS.</p>
+            <p className="text-stone-500 text-center">Belum ada data mangrove. Isi melalui Studio Sanity.</p>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {mangroves.map((item, i) => (
               <motion.div
-                key={item.id}
+                key={item._id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: i * 0.1 }}
                 className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
               >
-                {item.foto?.url && (
+                {item.fotoUrl && (
                   <div className="h-64 overflow-hidden">
                     <img
-                      src={getMediaUrl(item.foto.url)}
+                      src={item.fotoUrl}
                       alt={item.jenis}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
@@ -249,23 +242,23 @@ export default function Resources() {
                     <TreePine size={24} className="text-emerald-500 shrink-0" />
                     {item.jenis}
                   </h3>
-                  {item.ciri_ciri && (
-                    <div>
+                    {item.ciriCiri && (
+                      <div>
                       <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
                         <Eye size={14} /> Ciri-ciri
                       </div>
                       <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                        {item.ciri_ciri}
+                        {item.ciriCiri}
                       </p>
                     </div>
                   )}
-                  {item.potensi_pemanfaatan && (
+                  {item.potensiPemanfaatan && (
                     <div>
                       <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
                         <Lightbulb size={14} /> Potensi Pemanfaatan
                       </div>
                       <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                        {item.potensi_pemanfaatan}
+                        {item.potensiPemanfaatan}
                       </p>
                     </div>
                   )}

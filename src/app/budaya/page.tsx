@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import { Palette, Camera } from 'lucide-react';
 import FestivalCalendar from '../../components/FestivalCalendar';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { GalleryAttributes } from '../../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { galleriesQuery } from '~/sanity/lib/queries';
+import type { SanityGallery } from '@/types/sanity';
 
 type CultureItem = {
-  id: number;
+  id: string;
   title: string;
   cat: string;
   img: string;
@@ -26,30 +27,27 @@ export default function Culture() {
     async function loadGallery() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/strapi/galleries?populate=images&pagination[pageSize]=50`);
-        if (!res.ok) throw new Error(`Failed to load galleries (${res.status})`);
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<GalleryAttributes>(json.data);
+        const data = await sanityFetch<SanityGallery[]>(galleriesQuery);
 
-        const mapped = normalized.flatMap((entry) => {
-          const images = entry.images || [];
-          if (images.length === 0) {
+        const mapped = (data || []).flatMap((entry) => {
+          const images = entry.images?.filter(Boolean) as string[] | undefined;
+          if (!images || images.length === 0) {
             return [
               {
-                id: entry.id,
+                id: entry._id,
                 title: entry.title || "Galeri",
                 cat: entry.category || "Budaya",
                 img: "",
-                desc: "Konten dokumentasi dari Strapi CMS.",
+                desc: "Konten dokumentasi dari Studio Sanity.",
               },
             ];
           }
-          return images.map((image, idx) => ({
-            id: Number(`${entry.id}${idx}`),
+          return images.map((imgUrl, idx) => ({
+            id: `${entry._id}-${idx}`,
             title: entry.title || "Galeri",
             cat: entry.category || "Budaya",
-            img: getMediaUrl(image.url),
-            desc: "Konten dokumentasi dari Strapi CMS.",
+            img: imgUrl,
+            desc: "Konten dokumentasi dari Studio Sanity.",
           }));
         });
 

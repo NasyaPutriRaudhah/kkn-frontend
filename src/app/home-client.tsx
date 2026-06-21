@@ -6,8 +6,7 @@ import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, Chev
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
-import { getMediaUrl } from '../lib/strapi';
-import type { KknProgramAttributes, NewsAttributes, TourismAttributes } from '../types/strapi';
+import type { SanityNews, SanityTourism, SanityKknProgram } from '@/types/sanity';
 
 const SebatikMap = dynamic(() => import('../components/SebatikMap'), {
   ssr: false,
@@ -19,9 +18,9 @@ const SebatikMap = dynamic(() => import('../components/SebatikMap'), {
 });
 
 type HomeClientProps = {
-  newsItems: Array<NewsAttributes & { id: number }>;
-  tourismItems: Array<TourismAttributes & { id: number }>;
-  kknItems: Array<KknProgramAttributes & { id: number }>;
+  newsItems: SanityNews[];
+  tourismItems: SanityTourism[];
+  kknItems: SanityKknProgram[];
 };
 
 export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeClientProps) {
@@ -160,16 +159,16 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
             {newsItems.length > 0 ? (
               newsItems.map((item) => (
                 <NewsCard
-                  key={item.id}
-                  image={getMediaUrl(item.thumbnail?.url)}
-                  date={item.published_date || '-'}
+                  key={item._id}
+                  image={item.thumbnailUrl || ''}
+                  date={item.publishedDate || '-'}
                   title={item.title || 'Judul Berita'}
-                  desc={item.content || 'Konten berita dari Strapi CMS.'}
+                  desc={item.content || 'Konten berita dari Studio Sanity.'}
                 />
               ))
             ) : (
               <p className="text-stone-500 col-span-full">
-                Belum ada berita. Pastikan Strapi berjalan dan content type <strong>news</strong> sudah dibuat + dipublish.
+                Belum ada berita. Tambahkan data di Studio Sanity.
               </p>
             )}
           </div>
@@ -234,19 +233,19 @@ function DigitalBook({
   tourismItems,
   kknItems,
 }: {
-  tourismItems: Array<TourismAttributes & { id: number }>;
-  kknItems: Array<KknProgramAttributes & { id: number }>;
+  tourismItems: SanityTourism[];
+  kknItems: SanityKknProgram[];
 }) {
   const pages = [
     ...tourismItems.map((item) => ({
       title: item.name || 'Wisata',
-      desc: item.description || 'Data destinasi wisata dari Strapi CMS.',
-      img: getMediaUrl(item.image?.url),
+      desc: item.description || 'Data destinasi wisata dari Studio Sanity.',
+      img: item.imageUrl || '',
     })),
     ...kknItems.map((item) => ({
       title: item.title || 'Program KKN',
-      desc: item.description || 'Data program KKN dari Strapi CMS.',
-      img: getMediaUrl(item.documentation?.[0]?.url),
+      desc: item.description || 'Data program KKN dari Studio Sanity.',
+      img: item.documentationUrls?.[0] || '',
     })),
   ];
 
@@ -280,7 +279,7 @@ function DigitalBook({
   }, [handleScroll]);
 
   if (pages.length === 0) {
-    return <p className="text-stone-500">Belum ada data wisata/program KKN dari Strapi.</p>;
+    return <p className="text-stone-500">Belum ada data wisata/program KKN. Tambahkan data di Studio Sanity.</p>;
   }
 
   return (

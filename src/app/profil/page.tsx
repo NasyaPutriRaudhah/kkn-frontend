@@ -1,21 +1,18 @@
-import { fetchStrapi, getMediaUrl, normalizeSingleEntry, normalizeCollectionEntries } from "../../lib/strapi";
-import type { StrapiSingleResponse, ProfilAttributes, StrukturOrganisasiAttributes } from "../../types/strapi";
-
-export const dynamic = 'force-dynamic';
+import { sanityFetchServer } from '~/sanity/lib/fetch';
+import { profilQuery, strukturOrganisasiQuery } from '~/sanity/lib/queries';
+import type { SanityProfil, SanityStrukturOrganisasi } from '@/types/sanity';
 
 export default async function ProfilePage() {
-  let profil: (ProfilAttributes & { id: number }) | null = null;
-  let struktur: Array<StrukturOrganisasiAttributes & { id: number }> = [];
+  let profil: SanityProfil | null = null;
+  let struktur: SanityStrukturOrganisasi[] = [];
 
   try {
-    const [profilRes, strukturData] = await Promise.all([
-      fetchStrapi<StrapiSingleResponse<ProfilAttributes>>("/api/profil"),
-      fetchStrapi<{ data: Array<StrukturOrganisasiAttributes & { id: number }> }>(
-        "/api/struktur-organisasis?populate=foto&pagination[pageSize]=50"
-      ).then((r) => normalizeCollectionEntries<StrukturOrganisasiAttributes>(r.data)),
+    const [profilData, strukturData] = await Promise.all([
+      sanityFetchServer<SanityProfil>(profilQuery),
+      sanityFetchServer<SanityStrukturOrganisasi[]>(strukturOrganisasiQuery),
     ]);
-    profil = normalizeSingleEntry<ProfilAttributes>(profilRes.data);
-    struktur = strukturData;
+    profil = profilData;
+    struktur = strukturData || [];
   } catch (error) {
     console.error("Failed to load profil", error);
   }
@@ -26,7 +23,7 @@ export default async function ProfilePage() {
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-black text-emerald-900 dark:text-stone-900">Profil belum tersedia</h1>
           <p className="mt-4 text-stone-600 dark:text-stone-600">
-            Isi dan publish konten <strong>Profil</strong> di Strapi untuk menampilkan halaman ini.
+            Isi dan publish konten <strong>Profil</strong> di Studio Sanity untuk menampilkan halaman ini.
           </p>
         </div>
       </main>
@@ -81,13 +78,13 @@ export default async function ProfilePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {struktur.map((anggota) => (
                 <article
-                  key={anggota.id}
+                  key={anggota._id}
                   className="bg-white dark:bg-brand-creme rounded-[2.5rem] p-8 border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-xl transition-all duration-500 text-center group"
                 >
                   <div className="w-28 h-28 mx-auto mb-6 rounded-full overflow-hidden bg-stone-100 dark:bg-stone-200 ring-4 ring-emerald-50 dark:ring-stone-300 group-hover:ring-emerald-200 transition-all">
-                    {anggota.foto?.url ? (
+                    {anggota.fotoUrl ? (
                       <img
-                        src={getMediaUrl(anggota.foto.url)}
+                        src={anggota.fotoUrl}
                         alt={anggota.nama}
                         className="w-full h-full object-cover"
                       />

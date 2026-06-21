@@ -5,8 +5,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { GraduationCap, Trophy, Activity, Bus, Church, MapPin, Map, Search } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import StuntCheck from '../../components/StuntCheck';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { FacilityAttributes } from '../../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { facilitiesQuery } from '~/sanity/lib/queries';
+import type { SanityFacility } from '@/types/sanity';
 
 const categories = [
   { id: 'pendidikan', label: 'Pendidikan', icon: GraduationCap },
@@ -17,7 +18,6 @@ const categories = [
 ];
 
 type FacilityItem = {
-  id: number;
   title: string;
   loc: string;
   img: string;
@@ -39,19 +39,14 @@ export default function Facilities() {
     async function loadFacilities() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/strapi/facilities?populate=image&pagination[pageSize]=200`);
-        if (!res.ok) throw new Error(`Failed to load facilities (${res.status})`);
-
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<FacilityAttributes>(json.data);
-        const mapped = normalized.map((item) => ({
-          id: item.id,
+        const data = await sanityFetch<SanityFacility[]>(facilitiesQuery);
+        const mapped = (data || []).map((item) => ({
           title: item.name || 'Tanpa Nama',
-          loc: item.desa_location || '-',
-          img: getMediaUrl(item.image?.url),
+          loc: item.desaLocation || '-',
+          img: item.imageUrl || '',
           type: (item.type || '').toLowerCase(),
           desc: item.description || '',
-          mapsLink: item.google_maps_link || '',
+          mapsLink: item.googleMapsLink || '',
         }));
 
         if (mounted) setFacilities(mapped);

@@ -4,10 +4,11 @@ import { motion } from 'motion/react';
 import { ShoppingBag, Phone, Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { cn } from '../../lib/utils';
-import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
-import type { UmkmAttributes } from '../../types/strapi';
+import { sanityFetch } from '~/sanity/lib/fetch';
+import { umkmQuery } from '~/sanity/lib/queries';
+import type { SanityUmkm } from '@/types/sanity';
 
-type UmkmItem = UmkmAttributes & { id: number; imageUrl: string };
+type UmkmItem = SanityUmkm & { imageUrl: string };
 
 export default function UMKM() {
   const [filter, setFilter] = useState('Semua');
@@ -22,16 +23,11 @@ export default function UMKM() {
     async function loadUmkm() {
       try {
         setLoading(true);
-        const res = await fetch(`/api/strapi/umkms?populate=image&pagination[pageSize]=100`);
-        if (!res.ok) throw new Error(`Failed to load UMKM (${res.status})`);
-
-        const json = await res.json();
-        const normalized = normalizeCollectionEntries<UmkmAttributes>(json.data);
-        const mapped = normalized.map((item) => ({
-          id: item.id,
-          name: item.name || 'UMKM',
+        const data = await sanityFetch<SanityUmkm[]>(umkmQuery);
+        const mapped = (data || []).map((item) => ({
           ...item,
-          imageUrl: getMediaUrl(item.image?.url),
+          name: item.name || 'UMKM',
+          imageUrl: item.imageUrl || '',
         }));
         if (mounted) setItems(mapped);
       } catch (err) {
@@ -119,7 +115,7 @@ export default function UMKM() {
           {error && <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>}
           {filteredProducts.map((product, i) => (
             <motion.div
-              key={product.id}
+              key={product._id}
               layout
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

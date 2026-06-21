@@ -1,20 +1,13 @@
 import HomeClient from './home-client';
-import { fetchStrapiCollectionSafe } from '../lib/strapi';
-import type { KknProgramAttributes, NewsAttributes, TourismAttributes } from '../types/strapi';
-
-export const dynamic = 'force-dynamic';
+import { sanityFetchServer } from '~/sanity/lib/fetch';
+import { newsQuery, tourismQuery, kknProgramsQuery } from '~/sanity/lib/queries';
+import type { SanityNews, SanityTourism, SanityKknProgram } from '@/types/sanity';
 
 export default async function HomePage() {
   const [newsItems, tourismItems, kknItems] = await Promise.all([
-    fetchStrapiCollectionSafe<NewsAttributes>(
-      '/api/newss?populate=thumbnail&sort=published_date:desc&pagination[pageSize]=3'
-    ),
-    fetchStrapiCollectionSafe<TourismAttributes>(
-      '/api/tourisms?populate=image&pagination[pageSize]=3'
-    ),
-    fetchStrapiCollectionSafe<KknProgramAttributes>(
-      '/api/kkn-programs?populate=documentation&sort=date:desc&pagination[pageSize]=3'
-    ),
+    sanityFetchServer<SanityNews[]>(newsQuery),
+    sanityFetchServer<SanityTourism[]>(tourismQuery),
+    sanityFetchServer<SanityKknProgram[]>(kknProgramsQuery),
   ]);
 
   return <HomeClient newsItems={newsItems} tourismItems={tourismItems} kknItems={kknItems} />;
