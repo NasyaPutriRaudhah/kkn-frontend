@@ -44,6 +44,18 @@
   --color-primary-dark: var(--color-brand-forest);
   --color-bg-light: var(--color-brand-creme);
   --color-bg-dark: #d8d1c1;
+
+  /* FORSA DIGITAL palette */
+  --color-sea: #1565a0;
+  --color-sea-light: #e3f2fd;
+  --color-sand: #c8a35a;
+  --color-sand-pale: #fdf6e8;
+  --color-bark: #6d3f1f;
+  --color-forsa-amber: #854F0B;
+  --color-amber-pale: #FAEEDA;
+  --color-forsa-teal: #0F6E56;
+  --color-teal-pale: #E1F5EE;
+  --color-forsa-cream: #fefaf2;
 }
 
 @layer base {
@@ -69,4 +81,13 @@
 /* Flipbook Styles */
 .book-container {
   perspective: 1500px;
+}
+
+/* Hide scrollbar for nav */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

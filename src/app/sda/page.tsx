@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'motion/react';
-import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight, TreePine, Eye, Lightbulb } from 'lucide-react';
+import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight, TreePine, Eye, Lightbulb, BookOpen } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { getMediaUrl, normalizeCollectionEntries } from '../../lib/strapi';
 import type { ResourceSectorAttributes, MangroveAttributes } from '../../types/strapi';
@@ -272,6 +273,39 @@ export default function Resources() {
               </motion.div>
             ))}
           </div>
+        </section>
+
+        {/* FORSA DIGITAL Entry Card */}
+        <section className="mb-32">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-white dark:bg-brand-creme p-12 md:p-16 rounded-[3.5rem] border border-emerald-50 dark:border-stone-300 group hover:shadow-2xl transition-all duration-700 text-center"
+          >
+            <div className="max-w-2xl mx-auto">
+              <div className="inline-flex items-center gap-2 px-4 py-1 bg-emerald-50 dark:bg-emerald-300/30 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-100">
+                📖 Buku Saku Digital
+              </div>
+              <div className="w-20 h-20 rounded-[1.5rem] bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-8 shadow-sm group-hover:scale-110 transition-transform duration-500">
+                <BookOpen size={40} />
+              </div>
+              <h3 className="text-3xl md:text-4xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4 tracking-tight">
+                FORSA <span className="text-emerald-500 italic">DIGITAL</span>
+              </h3>
+              <p className="text-stone-500 dark:text-stone-600 text-sm mb-8 max-w-md mx-auto leading-relaxed">
+                Forest Story Digital — Buku saku digital interaktif yang mendokumentasikan potensi hutan dan budaya pesisir Sebatik Barat. Ekosistem mangrove, vegetasi pantai, kearifan lokal, dan narasi visual masyarakat pesisir.
+              </p>
+              <Link
+                href="/sda/forsa-digital"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-sm tracking-widest uppercase rounded-2xl transition-all hover:shadow-xl hover:shadow-emerald-100 group/link"
+              >
+                <BookOpen size={18} className="group-hover/link:rotate-6 transition-transform" />
+                Jelajahi FORSA DIGITAL
+                <ArrowUpRight size={18} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+              </Link>
+            </div>
+          </motion.div>
         </section>
       </div>
     </div>
