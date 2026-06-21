@@ -3,6 +3,8 @@ import { sanityFetchServer } from '~/sanity/lib/fetch';
 import { newsQuery, tourismQuery, kknProgramsQuery } from '~/sanity/lib/queries';
 import type { SanityNews, SanityTourism, SanityKknProgram } from '@/types/sanity';
 
+export const dynamic = 'force-dynamic';
+
 export default async function HomePage() {
   const [newsItems, tourismItems, kknItems] = await Promise.all([
     sanityFetchServer<SanityNews[]>(newsQuery),
