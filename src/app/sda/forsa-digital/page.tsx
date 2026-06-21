@@ -144,10 +144,10 @@ export default function ForsaDigitalPage() {
 
   // ── BOOK ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-brand-creme pt-20">
+    <div className="min-h-screen bg-stone-50 dark:bg-brand-creme">
       {/* Progress Bar */}
       {!isToc && (
-        <div className="h-1 bg-emerald-100 dark:bg-emerald-300/30 sticky top-[76px] z-50">
+        <div className="h-1 bg-emerald-100 dark:bg-emerald-300/30 sticky top-0 z-[60]">
           <div
             className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-400 ease-out"
             style={{ width: `${progressPct}%` }}
@@ -156,7 +156,7 @@ export default function ForsaDigitalPage() {
       )}
 
       {/* Sticky Navigation */}
-      <div className="sticky top-[76px] z-40 glass-nav">
+      <div className="sticky top-0 z-[60] glass-nav">
         <div className="flex items-center px-4 pt-2 pb-0">
           <Link
             href="/sda"
@@ -271,25 +271,6 @@ export default function ForsaDigitalPage() {
               <p className="text-sm text-stone-500 dark:text-stone-600 max-w-lg mx-auto leading-relaxed">
                 {activeChapter!.desc}
               </p>
-            </div>
-
-            {/* Chapter Quick-Jump */}
-            <div className="flex items-center gap-1 mb-8 pb-4 border-b border-emerald-100 dark:border-emerald-300/20 overflow-x-auto scrollbar-hide">
-              <span className="text-[10px] font-black tracking-widest text-stone-400 dark:text-stone-500 uppercase mr-1 shrink-0">Lompat:</span>
-              {chapters.map((ch, i) => (
-                <button
-                  key={ch.id}
-                  onClick={() => goToChapter(i)}
-                  className={cn(
-                    'shrink-0 text-[11px] font-bold px-2.5 py-1 rounded-md border transition-all',
-                    activeIdx === i
-                      ? 'bg-emerald-500 text-white border-emerald-500'
-                      : 'bg-white dark:bg-brand-creme text-stone-500 dark:text-stone-600 border-stone-200 dark:border-stone-300 hover:border-emerald-300 dark:hover:border-emerald-400 hover:text-emerald-600'
-                  )}
-                >
-                  {i === 0 ? 'P' : i === chapters.length - 1 ? 'T' : String(i)}
-                </button>
-              ))}
             </div>
 
             {/* Content with AnimatePresence */}
