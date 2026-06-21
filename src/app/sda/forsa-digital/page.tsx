@@ -38,9 +38,9 @@ export default function ForsaDigitalPage() {
   // ── COVER ────────────────────────────────────────────────────────────
   if (!showBook) {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-brand-creme flex flex-col">
+      <div className="min-h-screen bg-stone-50 dark:bg-brand-creme flex flex-col pt-24">
         {/* Top Navigation */}
-        <div className="pt-6 pb-4 px-8 max-w-7xl mx-auto w-full">
+        <div className="pb-4 px-8 max-w-7xl mx-auto w-full">
           <Link
             href="/sda"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-stone-400 hover:text-emerald-600 transition-colors"
@@ -144,10 +144,10 @@ export default function ForsaDigitalPage() {
 
   // ── BOOK ──────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-brand-creme">
+    <div className="min-h-screen bg-stone-50 dark:bg-brand-creme pt-20">
       {/* Progress Bar */}
       {!isToc && (
-        <div className="h-1 bg-emerald-100 dark:bg-emerald-300/30 sticky top-0 z-50">
+        <div className="h-1 bg-emerald-100 dark:bg-emerald-300/30 sticky top-[76px] z-50">
           <div
             className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-400 ease-out"
             style={{ width: `${progressPct}%` }}
@@ -156,7 +156,7 @@ export default function ForsaDigitalPage() {
       )}
 
       {/* Sticky Navigation */}
-      <div className="sticky top-0 z-40 glass-nav">
+      <div className="sticky top-[76px] z-40 glass-nav">
         <div className="flex items-center px-4 pt-2 pb-0">
           <Link
             href="/sda"
