@@ -140,54 +140,54 @@ export default function Resources() {
         </div>
 
         {/* Infographic Section */}
-        <section className="bg-emerald-500 text-white rounded-[5rem] p-16 md:p-32 shadow-2xl shadow-emerald-100 relative overflow-hidden mb-32">
+        <section className="bg-emerald-500 text-white rounded-[2rem] md:rounded-[5rem] p-10 sm:p-16 lg:p-32 shadow-2xl shadow-emerald-100 relative overflow-hidden mb-32">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/2" />
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
             <div>
               <h2 className="text-5xl md:text-7xl font-black mb-10 leading-none tracking-tighter">Masa Depan <br /> Berkelanjutan.</h2>
-              <p className="text-white/80 text-xl mb-12 leading-relaxed font-light italic">
+              <p className="text-white/80 text-lg sm:text-xl mb-12 leading-relaxed font-light italic">
                 "Mengintegrasikan kearifan lokal dengan inovasi hilirisasi untuk nilai tambah ekonomi yang berkeadilan."
               </p>
-              <div className="space-y-8">
-                <div className="flex gap-8 items-center group">
-                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:bg-white/20 transition-all">
-                    <PieChart size={32} />
+              <div className="space-y-6 sm:space-y-8">
+                <div className="flex gap-4 sm:gap-8 items-center group">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:bg-white/20 transition-all">
+                    <PieChart size={28} />
                   </div>
                   <div>
-                    <h4 className="font-black text-lg">Diversifikasi Ekonomi</h4>
+                    <h4 className="font-black text-base sm:text-lg">Diversifikasi Ekonomi</h4>
                     <p className="text-xs text-white/60 font-medium tracking-wide">Pengembangan 5 klaster ekonomi baru hingga 2030.</p>
                   </div>
                 </div>
-                <div className="flex gap-8 items-center group">
-                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:bg-white/20 transition-all">
-                    <Zap size={32} />
+                <div className="flex gap-4 sm:gap-8 items-center group">
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center shrink-0 border border-white/20 group-hover:bg-white/20 transition-all">
+                    <Zap size={28} />
                   </div>
                   <div>
-                    <h4 className="font-black text-lg">Energi Mandiri</h4>
+                    <h4 className="font-black text-base sm:text-lg">Energi Mandiri</h4>
                     <p className="text-xs text-white/60 font-medium tracking-wide">Target 40% penggunaan EBT di fasilitas publik.</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="relative">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-6">
-                  <div className="bg-white/10 p-10 rounded-[3rem] backdrop-blur-md border border-white/10">
-                    <span className="text-4xl font-black block mb-2 tracking-tighter">1,200<span className="text-sm">ha</span></span>
+              <div className="grid grid-cols-2 gap-4 sm:gap-6">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="bg-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] backdrop-blur-md border border-white/10">
+                    <span className="text-3xl sm:text-4xl font-black block mb-2 tracking-tighter">1,200<span className="text-sm">ha</span></span>
                     <span className="text-[10px] uppercase font-black tracking-widest opacity-60">Lahan Perkebunan</span>
                   </div>
-                  <div className="bg-white/10 p-10 rounded-[3rem] backdrop-blur-md border border-white/10">
-                    <span className="text-4xl font-black block mb-2 tracking-tighter">500<span className="text-sm">tn</span></span>
+                  <div className="bg-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] backdrop-blur-md border border-white/10">
+                    <span className="text-3xl sm:text-4xl font-black block mb-2 tracking-tighter">500<span className="text-sm">tn</span></span>
                     <span className="text-[10px] uppercase font-black tracking-widest opacity-60">Hasil Laut/Bulan</span>
                   </div>
                 </div>
-                <div className="space-y-6 pt-12">
-                  <div className="bg-white/10 p-10 rounded-[3rem] backdrop-blur-md border border-white/10">
-                    <span className="text-4xl font-black block mb-2 tracking-tighter">15<span className="text-sm">km</span></span>
+                <div className="space-y-4 sm:space-y-6 pt-0 sm:pt-12">
+                  <div className="bg-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] backdrop-blur-md border border-white/10">
+                    <span className="text-3xl sm:text-4xl font-black block mb-2 tracking-tighter">15<span className="text-sm">km</span></span>
                     <span className="text-[10px] uppercase font-black tracking-widest opacity-60">Konservasi Mangrove</span>
                   </div>
-                  <div className="bg-white/10 p-10 rounded-[3rem] backdrop-blur-md border border-white/10">
-                    <span className="text-4xl font-black block mb-2 tracking-tighter">12</span>
+                  <div className="bg-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[3rem] backdrop-blur-md border border-white/10">
+                    <span className="text-3xl sm:text-4xl font-black block mb-2 tracking-tighter">12</span>
                     <span className="text-[10px] uppercase font-black tracking-widest opacity-60">Komoditas Utama</span>
                   </div>
                 </div>

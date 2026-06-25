@@ -75,7 +75,7 @@ export default function UMKM() {
               </motion.div>
               <h1 className="text-6xl md:text-8xl font-black text-emerald-900 dark:text-stone-900 mb-8 tracking-tighter">Etalase UMKM.</h1>
               <p className="text-stone-500 dark:text-stone-600 max-w-xl text-xl font-light">
-                Data UMKM ditampilkan langsung dari Strapi CMS.
+                Data UMKM dikelola melalui Sanity CMS.
               </p>
             </div>
             <div className="flex bg-white dark:bg-brand-creme p-2 rounded-[2rem] border border-emerald-50 dark:border-stone-300 w-full md:w-auto shadow-sm">
