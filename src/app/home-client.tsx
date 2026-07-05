@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef, useState, useCallback, useEffect, ReactNode } from 'react';
-import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight, Briefcase, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
@@ -91,10 +91,12 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
 
       <section id="statistik" className="py-24 px-6 relative bg-stone-50 dark:bg-brand-creme">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8">
             <StatCard icon={<Users className="text-emerald-500" />} label="Populasi" value="18,450+" sub="Jiwa Terdaftar" />
             <StatCard icon={<MapIcon className="text-emerald-500" />} label="Luas Wilayah" value="95.2" sub="Kilometer Persegi" dark />
             <StatCard icon={<Compass className="text-emerald-500" />} label="Desa" value="4" sub="Terintegrasi" />
+            <StatCard icon={<Briefcase className="text-emerald-500" />} label="ASN Kecamatan" value="45+" sub="Aparatur Sipil Negara" dark />
+            <StatCard icon={<Building2 className="text-emerald-500" />} label="Perangkat Desa" value="80+" sub="Seluruh Desa" />
             <StatCard icon={<Calendar className="text-emerald-500" />} label="Event Tahunan" value="12+" sub="Festival & Budaya" dark />
           </div>
         </div>
