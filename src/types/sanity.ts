@@ -99,6 +99,14 @@ export type SanityResourceSector = {
   description?: string;
 };
 
+export type SanityPublicService = {
+  _id: string;
+  title: string;
+  slug?: { current: string };
+  description?: string;
+  icon?: string;
+};
+
 export type SanityCalendarEvent = {
   _id: string;
   title: string;

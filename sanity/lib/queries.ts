@@ -106,3 +106,20 @@ export const calendarEventsQuery = `*[_type == "calendarEvent"] | order(eventDat
   eventDate,
   color
 }`;
+
+
+export const publicServicesQuery = `*[_type == "publicService"] | order(orderRank asc) {
+  _id,
+  title,
+  slug,
+  description,
+  icon
+}`;
+
+export const publicServiceBySlugQuery = `*[_type == "publicService" && slug.current == $slug][0] {
+  _id,
+  title,
+  slug,
+  description,
+  icon
+}`;

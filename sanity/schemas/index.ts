@@ -11,6 +11,7 @@ import umkm from './umkm';
 import mangrove from './mangrove';
 import resourceSector from './resourceSector';
 import calendarEvent from './calendarEvent';
+import publicService from './publicService';
 
 export const schemaTypes = [
   news,
@@ -26,4 +27,5 @@ export const schemaTypes = [
   mangrove,
   resourceSector,
   calendarEvent,
+  publicService,
 ];
