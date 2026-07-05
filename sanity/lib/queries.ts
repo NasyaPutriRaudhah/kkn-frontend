@@ -123,3 +123,12 @@ export const publicServiceBySlugQuery = `*[_type == "publicService" && slug.curr
   description,
   icon
 }`;
+
+export const sectorItemsQuery = `*[_type == "sectorItem" && sector == $sector] | order(_createdAt desc) {
+  _id,
+  sector,
+  title,
+  description,
+  potensi,
+  "imageUrl": image.asset->url
+}`;

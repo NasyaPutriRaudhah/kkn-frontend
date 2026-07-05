@@ -130,10 +130,13 @@ export default function Resources() {
                 </div>
                 <h3 className="text-3xl font-black text-emerald-900 dark:text-stone-900 mb-4 tracking-tight leading-none">{sector.title}</h3>
                 <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed mb-10 font-light">{sector.desc}</p>
-                <button className="w-full flex items-center justify-between p-6 bg-stone-50 dark:bg-stone-200 rounded-2xl group/btn hover:bg-emerald-500 hover:text-white transition-all">
-                  <span className="text-[10px] font-black uppercase tracking-widest">Laporan Strategis</span>
+                <Link
+                  href={`/sda/${sector.id}`}
+                  className="w-full flex items-center justify-between p-6 bg-stone-50 dark:bg-stone-200 rounded-2xl group/btn hover:bg-emerald-500 hover:text-white transition-all"
+                >
+                  <span className="text-[10px] font-black uppercase tracking-widest">See Details</span>
                   <ArrowUpRight size={18} className="group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform" />
-                </button>
+                </Link>
               </motion.div>
             );
           })}

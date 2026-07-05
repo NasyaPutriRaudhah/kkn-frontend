@@ -12,6 +12,7 @@ import mangrove from './mangrove';
 import resourceSector from './resourceSector';
 import calendarEvent from './calendarEvent';
 import publicService from './publicService';
+import sectorItem from './sectorItem';
 
 export const schemaTypes = [
   news,
@@ -28,4 +29,5 @@ export const schemaTypes = [
   resourceSector,
   calendarEvent,
   publicService,
+  sectorItem,
 ];

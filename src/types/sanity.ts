@@ -107,6 +107,15 @@ export type SanityPublicService = {
   icon?: string;
 };
 
+export type SanitySectorItem = {
+  _id: string;
+  sector: string;
+  title: string;
+  description?: string;
+  potensi?: string;
+  imageUrl?: string | null;
+};
+
 export type SanityCalendarEvent = {
   _id: string;
   title: string;
