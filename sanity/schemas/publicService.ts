@@ -17,14 +17,10 @@ export default defineType({
       type: 'string',
       options: {
         list: [
-          { title: 'Kependudukan', value: 'Kependudukan' },
-          { title: 'Administrasi', value: 'Administrasi' },
-          { title: 'Kesehatan', value: 'Kesehatan' },
-          { title: 'Pendidikan', value: 'Pendidikan' },
-          { title: 'Sosial', value: 'Sosial' },
-          { title: 'Hukum', value: 'Hukum' },
-          { title: 'Pertanian', value: 'Pertanian' },
-          { title: 'Lainnya', value: 'Lainnya' },
+          { title: 'Kasi Ekonomi', value: 'Kasi Ekonomi' },
+          { title: 'Kasi Kesra', value: 'Kasi Kesra' },
+          { title: 'Kasi Trantib', value: 'Kasi Trantib' },
+          { title: 'Kasi Pemerintah', value: 'Kasi Pemerintah' },
         ],
       },
       validation: (r) => r.required(),
