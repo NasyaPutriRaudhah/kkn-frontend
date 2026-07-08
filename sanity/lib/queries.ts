@@ -59,6 +59,7 @@ export const villagesQuery = `*[_type == "village"] | order(name asc) {
 export const produkHukumQuery = `*[_type == "produkHukum"] | order(_createdAt desc) {
   _id,
   namaDokumen,
+  desa,
   "fileUrl": file.asset->url
 }`;
 

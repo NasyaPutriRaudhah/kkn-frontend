@@ -16,10 +16,13 @@ function getFileIcon(url: string) {
   return File;
 }
 
+const VILLAGES = ['Setabu', 'Bambangan', 'Tembaring', 'Binalawan', 'Liang Bunyu'] as const;
+
 export default function ProdukHukum() {
   const [documents, setDocuments] = useState<SanityProdukHukum[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [desaFilter, setDesaFilter] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -40,10 +43,14 @@ export default function ProdukHukum() {
     return () => { mounted = false; };
   }, []);
 
+  const filteredDocuments = desaFilter
+    ? documents.filter((doc) => doc.desa === desaFilter)
+    : documents;
+
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-24">
+        <header className="mb-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -59,6 +66,32 @@ export default function ProdukHukum() {
           </p>
         </header>
 
+        <div className="flex flex-wrap gap-3 mb-16">
+          <button
+            onClick={() => setDesaFilter('')}
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+              !desaFilter
+                ? 'bg-emerald-900 text-white shadow-md'
+                : 'bg-white dark:bg-brand-creme text-stone-600 hover:bg-emerald-50 border border-stone-200 dark:border-stone-300'
+            }`}
+          >
+            Semua Desa
+          </button>
+          {VILLAGES.map((village) => (
+            <button
+              key={village}
+              onClick={() => setDesaFilter(village)}
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                desaFilter === village
+                  ? 'bg-emerald-900 text-white shadow-md'
+                  : 'bg-white dark:bg-brand-creme text-stone-600 hover:bg-emerald-50 border border-stone-200 dark:border-stone-300'
+              }`}
+            >
+              Desa {village}
+            </button>
+          ))}
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {loading && (
             <p className="col-span-full text-stone-500">Memuat dokumen...</p>
@@ -66,7 +99,7 @@ export default function ProdukHukum() {
           {error && (
             <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>
           )}
-          {documents.map((doc, i) => {
+          {filteredDocuments.map((doc, i) => {
             const fileUrl = doc.fileUrl || null;
             const Icon = fileUrl ? getFileIcon(fileUrl) : File;
             return (
@@ -108,8 +141,12 @@ export default function ProdukHukum() {
               </motion.div>
             );
           })}
-          {!loading && !error && documents.length === 0 && (
-            <p className="col-span-full text-stone-500">Belum ada dokumen tersedia.</p>
+          {!loading && !error && filteredDocuments.length === 0 && (
+            <p className="col-span-full text-stone-500">
+              {documents.length === 0
+                ? 'Belum ada dokumen tersedia.'
+                : 'Tidak ada dokumen untuk desa ini.'}
+            </p>
           )}
         </div>
       </div>

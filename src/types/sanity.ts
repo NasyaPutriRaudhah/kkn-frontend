@@ -59,6 +59,7 @@ export type SanityVillage = {
 export type SanityProdukHukum = {
   _id: string;
   namaDokumen: string;
+  desa: string;
   fileUrl?: string | null;
 };
 
