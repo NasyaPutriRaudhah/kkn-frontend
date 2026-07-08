@@ -1,16 +1,10 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { FileText, BookUser, ScrollText, Building, FileCheck, Landmark, Users, Heart, Shield, LucideIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { sanityFetch } from '~/sanity/lib/fetch';
 import { publicServicesQuery } from '~/sanity/lib/queries';
 import type { SanityPublicService } from '@/types/sanity';
-
-const iconMap: Record<string, LucideIcon> = {
-  FileText, BookUser, ScrollText, Building, FileCheck, Landmark, Users, Heart, Shield,
-};
 
 export default function LayananPublik() {
   const [services, setServices] = useState<SanityPublicService[]>([]);
@@ -37,7 +31,7 @@ export default function LayananPublik() {
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <header className="mb-24">
+        <header className="mb-12">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -53,46 +47,57 @@ export default function LayananPublik() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {loading && (
-            <p className="col-span-full text-stone-500">Memuat layanan...</p>
-          )}
-          {error && (
-            <p className="col-span-full text-red-600">Gagal memuat data: {error}</p>
-          )}
-          {services.map((service, i) => {
-            const Icon = service.icon && iconMap[service.icon] ? iconMap[service.icon] : FileText;
-            const slug = service.slug?.current || '';
-            return (
-              <motion.div
-                key={service._id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-              >
-                <Link
-                  href={`/layanan-publik/${slug}`}
-                  className="group block bg-white dark:bg-brand-creme rounded-[2.5rem] border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden p-10"
-                >
-                  <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-300/30 rounded-2xl flex items-center justify-center text-emerald-500 mb-8 group-hover:scale-110 transition-transform duration-500">
-                    <Icon size={32} />
-                  </div>
-                  <h3 className="text-xl font-black text-emerald-900 dark:text-stone-900 leading-tight tracking-tight group-hover:text-emerald-500 transition-colors mb-4">
-                    {service.title}
-                  </h3>
-                  {service.description && (
-                    <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed line-clamp-3">
-                      {service.description}
-                    </p>
-                  )}
-                </Link>
-              </motion.div>
-            );
-          })}
-          {!loading && !error && services.length === 0 && (
-            <p className="col-span-full text-stone-500">Belum ada layanan tersedia.</p>
-          )}
-        </div>
+        {loading && <p className="text-stone-500">Memuat layanan...</p>}
+        {error && <p className="text-red-600">Gagal memuat data: {error}</p>}
+
+        {!loading && !error && services.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="overflow-x-auto"
+          >
+            <table className="w-full border-collapse bg-white dark:bg-brand-creme rounded-[2.5rem] overflow-hidden shadow-sm border border-emerald-50 dark:border-stone-300">
+              <thead>
+                <tr className="bg-emerald-900 dark:bg-emerald-800 text-white">
+                  <th className="text-left px-6 py-4 text-sm font-bold uppercase tracking-wider w-16">No</th>
+                  <th className="text-left px-6 py-4 text-sm font-bold uppercase tracking-wider">Kategori</th>
+                  <th className="text-left px-6 py-4 text-sm font-bold uppercase tracking-wider">Jenis Pelayanan</th>
+                  <th className="text-left px-6 py-4 text-sm font-bold uppercase tracking-wider">Persyaratan</th>
+                  <th className="text-left px-6 py-4 text-sm font-bold uppercase tracking-wider">Keterangan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {services.map((service, i) => (
+                  <motion.tr
+                    key={service._id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.04 }}
+                    className="border-b border-emerald-50 dark:border-stone-200 last:border-b-0 hover:bg-emerald-50/50 dark:hover:bg-emerald-300/5 transition-colors"
+                  >
+                    <td className="px-6 py-5 text-stone-600 dark:text-stone-700 font-semibold text-sm">{service.nomor}</td>
+                    <td className="px-6 py-5">
+                      <span className="inline-block px-3 py-1 bg-emerald-100 dark:bg-emerald-300/20 text-emerald-700 dark:text-emerald-500 rounded-full text-xs font-bold uppercase tracking-wider">
+                        {service.kategori}
+                      </span>
+                    </td>
+                    <td className="px-6 py-5 text-emerald-900 dark:text-stone-900 font-bold">{service.jenisPelayanan}</td>
+                    <td className="px-6 py-5 text-stone-600 dark:text-stone-700 text-sm leading-relaxed whitespace-pre-line">
+                      {service.persyaratan || '-'}
+                    </td>
+                    <td className="px-6 py-5 text-stone-500 dark:text-stone-600 text-sm leading-relaxed whitespace-pre-line">
+                      {service.keterangan || '-'}
+                    </td>
+                  </motion.tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        )}
+
+        {!loading && !error && services.length === 0 && (
+          <p className="text-stone-500">Belum ada layanan tersedia.</p>
+        )}
       </div>
     </div>
   );

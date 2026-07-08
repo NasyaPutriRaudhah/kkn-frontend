@@ -109,20 +109,13 @@ export const calendarEventsQuery = `*[_type == "calendarEvent"] | order(eventDat
 }`;
 
 
-export const publicServicesQuery = `*[_type == "publicService"] | order(orderRank asc) {
+export const publicServicesQuery = `*[_type == "publicService"] | order(nomor asc) {
   _id,
-  title,
-  slug,
-  description,
-  icon
-}`;
-
-export const publicServiceBySlugQuery = `*[_type == "publicService" && slug.current == $slug][0] {
-  _id,
-  title,
-  slug,
-  description,
-  icon
+  nomor,
+  kategori,
+  jenisPelayanan,
+  persyaratan,
+  keterangan
 }`;
 
 export const sectorItemsQuery = `*[_type == "sectorItem" && sector == $sector] | order(_createdAt desc) {

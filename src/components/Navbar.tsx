@@ -5,12 +5,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { cn } from '../lib/utils';
-import { sanityFetch } from '~/sanity/lib/fetch';
-import { publicServicesQuery } from '~/sanity/lib/queries';
-import type { SanityPublicService } from '@/types/sanity';
 
 const navLinks = [
   { name: 'Profil', href: '/profil' },
@@ -20,17 +17,14 @@ const navLinks = [
   { name: 'SDA', href: '/sda' },
   { name: 'Budaya', href: '/budaya' },
   { name: 'Produk Hukum', href: '/produk-hukum' },
+  { name: 'Layanan Publik', href: '/layanan-publik' },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [services, setServices] = useState<SanityPublicService[]>([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [mobileLayananOpen, setMobileLayananOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
-  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -40,28 +34,9 @@ export default function Navbar() {
 
   useEffect(() => {
     setIsOpen(false);
-    setMobileLayananOpen(false);
   }, [pathname]);
 
-  useEffect(() => {
-    sanityFetch<SanityPublicService[]>(publicServicesQuery)
-      .then((data) => setServices(data || []))
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   if (pathname.startsWith('/studio')) return null;
-
-  const isLayananActive = pathname.startsWith('/layanan-publik');
 
   return (
     <nav
@@ -108,64 +83,8 @@ export default function Navbar() {
               >
                 {link.name}
               </Link>
-              );
-            })}
-          {/* Layanan Publik Dropdown */}
-          <div ref={dropdownRef} className="relative">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              onMouseEnter={() => setDropdownOpen(true)}
-              className={cn(
-                'text-sm font-medium tracking-wide transition-all relative py-2 flex items-center gap-1',
-                isLayananActive
-                  ? 'text-emerald-500 dark:text-emerald-300 border-b-2 border-emerald-300'
-                  : 'text-stone-700 dark:text-stone-800 hover:text-emerald-400 transition-colors'
-              )}
-            >
-              Layanan Publik
-              <ChevronDown
-                size={14}
-                className={cn(
-                  'transition-transform duration-200',
-                  dropdownOpen && 'rotate-180'
-                )}
-              />
-            </button>
-            <AnimatePresence>
-              {dropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.15 }}
-                  onMouseLeave={() => setDropdownOpen(false)}
-                  className="absolute top-full left-0 mt-2 w-72 bg-white dark:bg-brand-creme rounded-2xl border border-emerald-50 dark:border-stone-300 shadow-2xl shadow-emerald-900/5 overflow-hidden p-2"
-                >
-                  {services.length > 0 ? (
-                    services.map((service) => {
-                      const slug = service.slug?.current || '';
-                      return (
-                        <Link
-                          key={service._id}
-                          href={`/layanan-publik/${slug}`}
-                          className={cn(
-                            'block px-4 py-3 rounded-xl text-sm font-medium transition-colors',
-                            pathname === `/layanan-publik/${slug}`
-                              ? 'bg-emerald-50 dark:bg-emerald-300/20 text-emerald-600 dark:text-emerald-400'
-                              : 'text-stone-600 dark:text-stone-700 hover:bg-emerald-50 dark:hover:bg-emerald-300/10 hover:text-emerald-500'
-                          )}
-                        >
-                          {service.title}
-                        </Link>
-                      );
-                    })
-                  ) : (
-                    <p className="px-4 py-3 text-sm text-stone-400">Belum ada layanan</p>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+            );
+          })}
         </div>
 
         {/* Mobile Toggle */}
@@ -205,60 +124,6 @@ export default function Navbar() {
                 </Link>
               );
             })}
-
-            {/* Mobile Layanan Publik */}
-            <div>
-              <button
-                onClick={() => setMobileLayananOpen(!mobileLayananOpen)}
-                className={cn(
-                  'w-full flex items-center justify-between text-lg font-medium p-2 rounded-lg transition-colors',
-                  isLayananActive
-                    ? 'bg-emerald-500/10 text-emerald-500'
-                    : 'text-stone-600 dark:text-stone-700'
-                )}
-              >
-                Layanan Publik
-                <ChevronDown
-                  size={18}
-                  className={cn(
-                    'transition-transform duration-200',
-                    mobileLayananOpen && 'rotate-180'
-                  )}
-                />
-              </button>
-              <AnimatePresence>
-                {mobileLayananOpen && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden pl-4 flex flex-col gap-2 mt-2"
-                  >
-                    {services.length > 0 ? (
-                      services.map((service) => {
-                        const slug = service.slug?.current || '';
-                        return (
-                          <Link
-                            key={service._id}
-                            href={`/layanan-publik/${slug}`}
-                            className={cn(
-                              'text-base p-2 rounded-lg transition-colors',
-                              pathname === `/layanan-publik/${slug}`
-                                ? 'bg-emerald-500/10 text-emerald-500'
-                                : 'text-stone-500 dark:text-stone-600 hover:text-emerald-500'
-                            )}
-                          >
-                            {service.title}
-                          </Link>
-                        );
-                      })
-                    ) : (
-                      <p className="text-sm text-stone-400 p-2">Belum ada layanan</p>
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

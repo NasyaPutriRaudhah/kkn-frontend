@@ -102,10 +102,11 @@ export type SanityResourceSector = {
 
 export type SanityPublicService = {
   _id: string;
-  title: string;
-  slug?: { current: string };
-  description?: string;
-  icon?: string;
+  nomor: number;
+  kategori: string;
+  jenisPelayanan: string;
+  persyaratan?: string;
+  keterangan?: string;
 };
 
 export type SanitySectorItem = {

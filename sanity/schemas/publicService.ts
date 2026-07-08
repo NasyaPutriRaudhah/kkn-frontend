@@ -6,37 +6,52 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'title',
-      title: 'Nama Layanan',
-      type: 'string',
-      validation: (r) => r.required(),
-    }),
-    defineField({
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: { source: 'title', maxLength: 96 },
-      validation: (r) => r.required(),
-    }),
-    defineField({
-      name: 'description',
-      title: 'Deskripsi',
-      type: 'text',
-    }),
-    defineField({
-      name: 'icon',
-      title: 'Ikon',
-      type: 'string',
-      description: 'Nama ikon dari Lucide React (contoh: FileText, BookUser, ScrollText)',
-    }),
-    defineField({
-      name: 'orderRank',
-      title: 'Urutan',
+      name: 'nomor',
+      title: 'Nomor',
       type: 'number',
-      initialValue: 0,
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'kategori',
+      title: 'Kategori',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Kependudukan', value: 'Kependudukan' },
+          { title: 'Administrasi', value: 'Administrasi' },
+          { title: 'Kesehatan', value: 'Kesehatan' },
+          { title: 'Pendidikan', value: 'Pendidikan' },
+          { title: 'Sosial', value: 'Sosial' },
+          { title: 'Hukum', value: 'Hukum' },
+          { title: 'Pertanian', value: 'Pertanian' },
+          { title: 'Lainnya', value: 'Lainnya' },
+        ],
+      },
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'jenisPelayanan',
+      title: 'Jenis Pelayanan',
+      type: 'string',
+      validation: (r) => r.required(),
+    }),
+    defineField({
+      name: 'persyaratan',
+      title: 'Persyaratan',
+      type: 'text',
+      rows: 3,
+    }),
+    defineField({
+      name: 'keterangan',
+      title: 'Keterangan',
+      type: 'text',
+      rows: 3,
     }),
   ],
   orderings: [
-    { title: 'Urutan', name: 'orderRank', by: [{ field: 'orderRank', direction: 'asc' }] },
+    { title: 'Nomor', name: 'nomor', by: [{ field: 'nomor', direction: 'asc' }] },
   ],
+  preview: {
+    select: { title: 'jenisPelayanan', subtitle: 'kategori' },
+  },
 });
