@@ -33,9 +33,10 @@ const whoData: Record<string, [number, number, number, number][]> = {
   ],
 };
 
-const monthNames = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+type CalculatorMode = 'baby' | 'toddler';
 
 export default function StuntCheck() {
+  const [mode, setMode] = useState<CalculatorMode>('baby');
   const [gender, setGender] = useState<'L' | 'P' | null>(null);
   const [ageMonths, setAgeMonths] = useState(0);
   const [height, setHeight] = useState('');
@@ -43,13 +44,16 @@ export default function StuntCheck() {
   const [inputYears, setInputYears] = useState(0);
   const [inputMonths, setInputMonths] = useState(0);
 
+  const maxAge = mode === 'baby' ? 24 : 60;
+
   const updateAge = (y: number, m: number) => {
-    const total = Math.min(y * 12 + m, 60);
+    const total = Math.min(y * 12 + m, maxAge);
     setAgeMonths(total);
   };
 
   const handleYearChange = (y: number) => {
-    const clamped = Math.max(0, Math.min(y, 5));
+    const maxY = mode === 'baby' ? 2 : 5;
+    const clamped = Math.max(0, Math.min(y, maxY));
     setInputYears(clamped);
     updateAge(clamped, inputMonths);
   };
@@ -59,6 +63,19 @@ export default function StuntCheck() {
     setInputMonths(clamped);
     updateAge(inputYears, clamped);
   };
+
+  const switchMode = (newMode: CalculatorMode) => {
+    setMode(newMode);
+    setGender(null);
+    setAgeMonths(0);
+    setInputYears(0);
+    setInputMonths(0);
+    setHeight('');
+    setResult(null);
+  };
+
+  const measureLabel = mode === 'baby' ? 'Panjang Badan' : 'Tinggi Badan';
+  const measureLabelShort = mode === 'baby' ? 'PB' : 'TB';
 
   const calculate = () => {
     if (!gender || !height) return;
@@ -103,14 +120,7 @@ export default function StuntCheck() {
 
   const getStatusBar = (z: number) => {
     const pct = Math.max(0, Math.min(100, ((z + 4) / 7) * 100));
-    const segments = [
-      { label: '-3 SD', pos: 0, color: 'bg-red-500' },
-      { label: '-2 SD', pos: 28.6, color: 'bg-orange-500' },
-      { label: '-1 SD', pos: 57.1, color: 'bg-amber-500' },
-      { label: 'Median', pos: 71.4, color: 'bg-emerald-500' },
-      { label: '+1 SD', pos: 100, color: 'bg-emerald-500' },
-    ];
-    return { pct, segments };
+    return { pct };
   };
 
   const bar = result ? getStatusBar(result.z) : null;
@@ -124,11 +134,11 @@ export default function StuntCheck() {
       <div className="relative overflow-hidden">
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-emerald-50 dark:bg-stone-200/20 rounded-full blur-3xl" />
         <div className="relative z-10 p-6 sm:p-10 md:p-14">
-          <div className="flex items-center gap-4 sm:gap-5 mb-8 sm:mb-10">
+          <div className="flex items-center gap-4 sm:gap-5 mb-6 sm:mb-8">
             <div className="w-12 h-12 sm:w-16 sm:h-16 bg-rose-500 rounded-[1.2rem] sm:rounded-[1.5rem] flex items-center justify-center shadow-lg shadow-rose-100 shrink-0">
               <Activity size={22} className="sm:size-[30px] text-white" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <h3 className="text-2xl sm:text-3xl font-black text-emerald-900 dark:text-stone-900 tracking-tight">
                 STUNTCHECK
               </h3>
@@ -136,6 +146,34 @@ export default function StuntCheck() {
                 Kalkulator Deteksi Stunting — Standar WHO
               </p>
             </div>
+          </div>
+
+          {/* Mode Selector */}
+          <div className="flex gap-3 mb-8">
+            <button
+              onClick={() => switchMode('baby')}
+              className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border ${
+                mode === 'baby'
+                  ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-100'
+                  : 'bg-stone-50 dark:bg-stone-200 border-stone-100 dark:border-stone-300 text-stone-500 hover:border-rose-300'
+              }`}
+            >
+              <Baby size={18} className="mx-auto mb-1.5" />
+              0–2 Tahun
+              <span className="block text-[8px] font-medium normal-case mt-0.5 opacity-70">Panjang Badan</span>
+            </button>
+            <button
+              onClick={() => switchMode('toddler')}
+              className={`flex-1 py-3 sm:py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border ${
+                mode === 'toddler'
+                  ? 'bg-rose-500 border-rose-500 text-white shadow-lg shadow-rose-100'
+                  : 'bg-stone-50 dark:bg-stone-200 border-stone-100 dark:border-stone-300 text-stone-500 hover:border-rose-300'
+              }`}
+            >
+              <Baby size={18} className="mx-auto mb-1.5" />
+              2–5 Tahun
+              <span className="block text-[8px] font-medium normal-case mt-0.5 opacity-70">Tinggi Badan</span>
+            </button>
           </div>
 
           {result ? (
@@ -152,7 +190,7 @@ export default function StuntCheck() {
                     {result.status}
                   </p>
                   <p className="text-stone-400 text-sm font-light mt-2">
-                    Z-Score Tinggi Badan menurut Umur (TB/U)
+                    Z-Score {measureLabel} menurut Umur ({measureLabelShort}/U)
                   </p>
                 </div>
 
@@ -187,7 +225,7 @@ export default function StuntCheck() {
                     <p className="font-black text-emerald-900 dark:text-stone-900">{ageMonths} Bulan</p>
                   </div>
                   <div className="bg-white dark:bg-brand-creme rounded-2xl p-4 border border-stone-100 dark:border-stone-300">
-                    <p className="text-[9px] font-black uppercase tracking-widest text-stone-400 mb-1">Tinggi Badan</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-stone-400 mb-1">{measureLabel}</p>
                     <p className="font-black text-emerald-900 dark:text-stone-900">{height} cm</p>
                   </div>
                   <div className="bg-white dark:bg-brand-creme rounded-2xl p-4 border border-stone-100 dark:border-stone-300">
@@ -268,18 +306,21 @@ export default function StuntCheck() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-center text-xs text-stone-400 font-light mt-2 sm:mt-3">Total: <span className="font-bold text-emerald-600">{ageMonths} bulan</span></p>
+                  <p className="text-center text-xs text-stone-400 font-light mt-2 sm:mt-3">
+                    Total: <span className="font-bold text-emerald-600">{ageMonths} bulan</span>
+                    {mode === 'baby' && <span className="text-stone-400 font-normal"> (maks. 24)</span>}
+                  </p>
                 </div>
 
                 <div className="md:col-span-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-3 sm:mb-4 block">Tinggi Badan (cm)</label>
+                  <label className="text-[10px] font-black uppercase tracking-widest text-stone-400 mb-3 sm:mb-4 block">{measureLabel} (cm)</label>
                   <div className="relative">
                     <Ruler size={16} className="sm:size-[18px] absolute left-4 sm:left-5 top-1/2 -translate-y-1/2 text-stone-400" />
                     <input
                       type="number"
                       value={height}
                       onChange={e => setHeight(e.target.value)}
-                      placeholder="Masukkan tinggi badan anak dalam cm"
+                      placeholder={`Masukkan ${measureLabel.toLowerCase()} anak dalam cm`}
                       className="w-full pl-11 sm:pl-14 pr-12 sm:pr-14 py-4 sm:py-5 bg-stone-50 dark:bg-stone-200 border border-stone-100 dark:border-stone-300 rounded-2xl text-emerald-900 dark:text-stone-900 font-bold placeholder-stone-400 placeholder:font-light text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
                     />
                     <span className="absolute right-4 sm:right-6 top-1/2 -translate-y-1/2 text-xs sm:text-sm font-black text-stone-400">cm</span>
