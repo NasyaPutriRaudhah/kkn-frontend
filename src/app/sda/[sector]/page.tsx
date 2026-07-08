@@ -130,11 +130,15 @@ export default function SectorDetail() {
                           </div>
                         </div>
                       )}
-                      {item.fotoBuahBungaUrl && (
+                      {item.fotoBuahBungaUrls && item.fotoBuahBungaUrls.length > 0 && (
                         <div className="space-y-1">
                           <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Buah/Bunga</span>
-                          <div className="h-36 overflow-hidden rounded-2xl">
-                            <img src={item.fotoBuahBungaUrl} alt={`${item.jenis} buah/bunga`} className="w-full h-full object-cover" />
+                          <div className={item.fotoBuahBungaUrls.length > 1 ? 'grid grid-cols-2 gap-2' : ''}>
+                            {item.fotoBuahBungaUrls.filter(Boolean).map((url, idx) => (
+                              <div key={idx} className="h-36 overflow-hidden rounded-2xl">
+                                <img src={url!} alt={`${item.jenis} buah/bunga ${idx + 1}`} className="w-full h-full object-cover" />
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}
@@ -186,13 +190,13 @@ export default function SectorDetail() {
                         </p>
                       </div>
                     )}
-                    {item.pemanfaatanLanjutan && (
+                    {item.pemanfaatan && (
                       <div>
                         <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                          <Lightbulb size={14} /> Pemanfaatan Lanjutan
+                          <Lightbulb size={14} /> Pemanfaatan
                         </div>
                         <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                          {item.pemanfaatanLanjutan}
+                          {item.pemanfaatan}
                         </p>
                       </div>
                     )}
