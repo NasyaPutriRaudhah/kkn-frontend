@@ -87,8 +87,13 @@ export const mangrovesQuery = `*[_type == "mangrove"] | order(_createdAt desc) {
   _id,
   jenis,
   ciriCiri,
-  potensiPemanfaatan,
-  "fotoUrl": foto.asset->url
+  penanaman,
+  perawatan,
+  pemanfaatanLanjutan,
+  "fotoDaunUrl": fotoDaun.asset->url,
+  "fotoBuahBungaUrl": fotoBuahBunga.asset->url,
+  "fotoAkarUrl": fotoAkar.asset->url,
+  "fotoKeseluruhanUrl": fotoKeseluruhan.asset->url
 }`;
 
 export const resourceSectorsQuery = `*[_type == "resourceSector"] | order(orderRank) {

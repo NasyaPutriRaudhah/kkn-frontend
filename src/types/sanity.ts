@@ -87,8 +87,13 @@ export type SanityMangrove = {
   _id: string;
   jenis: string;
   ciriCiri?: string;
-  potensiPemanfaatan?: string;
-  fotoUrl?: string | null;
+  penanaman?: string;
+  perawatan?: string;
+  pemanfaatanLanjutan?: string;
+  fotoDaunUrl?: string | null;
+  fotoBuahBungaUrl?: string | null;
+  fotoAkarUrl?: string | null;
+  fotoKeseluruhanUrl?: string | null;
 };
 
 export type SanityResourceSector = {

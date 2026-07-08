@@ -6,8 +6,16 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({ name: 'jenis', title: 'Jenis', type: 'string', validation: (r) => r.required() }),
-    defineField({ name: 'foto', title: 'Foto', type: 'image' }),
+    defineField({ name: 'fotoDaun', title: 'Foto 1 (Daun)', type: 'image' }),
+    defineField({ name: 'fotoBuahBunga', title: 'Foto 2 (Buah/Bunga)', type: 'image' }),
+    defineField({ name: 'fotoAkar', title: 'Foto 3 (Akar)', type: 'image' }),
+    defineField({ name: 'fotoKeseluruhan', title: 'Foto 4 (Keseluruhan)', type: 'image' }),
     defineField({ name: 'ciriCiri', title: 'Ciri-ciri', type: 'text' }),
-    defineField({ name: 'potensiPemanfaatan', title: 'Potensi Pemanfaatan', type: 'text' }),
+    defineField({ name: 'penanaman', title: 'Penanaman', type: 'text' }),
+    defineField({ name: 'perawatan', title: 'Perawatan', type: 'text' }),
+    defineField({ name: 'pemanfaatanLanjutan', title: 'Pemanfaatan Lanjutan', type: 'text' }),
   ],
+  preview: {
+    select: { title: 'jenis' },
+  },
 });

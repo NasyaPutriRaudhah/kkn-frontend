@@ -114,20 +114,48 @@ export default function SectorDetail() {
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
                 >
-                  {item.fotoUrl && (
-                    <div className="h-64 overflow-hidden">
-                      <img
-                        src={item.fotoUrl}
-                        alt={item.jenis}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      />
-                    </div>
-                  )}
                   <div className="p-10 space-y-6">
                     <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
                       <TreePine size={24} className="text-emerald-500 shrink-0" />
                       {item.jenis}
                     </h3>
+
+                    {/* Photo Grid */}
+                    <div className="grid grid-cols-2 gap-3">
+                      {item.fotoDaunUrl && (
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Daun</span>
+                          <div className="h-36 overflow-hidden rounded-2xl">
+                            <img src={item.fotoDaunUrl} alt={`${item.jenis} daun`} className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+                      {item.fotoBuahBungaUrl && (
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Buah/Bunga</span>
+                          <div className="h-36 overflow-hidden rounded-2xl">
+                            <img src={item.fotoBuahBungaUrl} alt={`${item.jenis} buah/bunga`} className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+                      {item.fotoAkarUrl && (
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Akar</span>
+                          <div className="h-36 overflow-hidden rounded-2xl">
+                            <img src={item.fotoAkarUrl} alt={`${item.jenis} akar`} className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+                      {item.fotoKeseluruhanUrl && (
+                        <div className="space-y-1">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-stone-400">Keseluruhan</span>
+                          <div className="h-36 overflow-hidden rounded-2xl">
+                            <img src={item.fotoKeseluruhanUrl} alt={`${item.jenis} keseluruhan`} className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
                     {item.ciriCiri && (
                       <div>
                         <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
@@ -138,13 +166,33 @@ export default function SectorDetail() {
                         </p>
                       </div>
                     )}
-                    {item.potensiPemanfaatan && (
+                    {item.penanaman && (
                       <div>
                         <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                          <Lightbulb size={14} /> Potensi Pemanfaatan
+                          <Leaf size={14} /> Penanaman
                         </div>
                         <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                          {item.potensiPemanfaatan}
+                          {item.penanaman}
+                        </p>
+                      </div>
+                    )}
+                    {item.perawatan && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Lightbulb size={14} /> Perawatan
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.perawatan}
+                        </p>
+                      </div>
+                    )}
+                    {item.pemanfaatanLanjutan && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Lightbulb size={14} /> Pemanfaatan Lanjutan
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.pemanfaatanLanjutan}
                         </p>
                       </div>
                     )}
