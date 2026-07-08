@@ -4,25 +4,27 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion } from 'motion/react';
-import { Waves, Leaf, Landmark, Zap, ArrowLeft, Eye, Lightbulb, LucideIcon } from 'lucide-react';
+import { Waves, Leaf, Landmark, TreePine, ArrowLeft, Eye, Lightbulb, LucideIcon } from 'lucide-react';
 import { sanityFetch } from '~/sanity/lib/fetch';
-import { sectorItemsQuery } from '~/sanity/lib/queries';
-import type { SanitySectorItem } from '@/types/sanity';
+import { sectorItemsQuery, mangrovesQuery } from '~/sanity/lib/queries';
+import type { SanitySectorItem, SanityMangrove } from '@/types/sanity';
 
 const sectorMeta: Record<string, { title: string; icon: LucideIcon; color: string; desc: string }> = {
   perikanan: { title: 'Sektor Perikanan', icon: Waves, color: 'blue', desc: 'Potensi dan hasil perikanan di Sebatik Barat.' },
   perkebunan: { title: 'Sektor Perkebunan', icon: Leaf, color: 'green', desc: 'Komoditas perkebunan yang menjadi andalan ekonomi.' },
   pariwisata: { title: 'Sektor Pariwisata', icon: Landmark, color: 'orange', desc: 'Destinasi wisata alam dan budaya Sebatik Barat.' },
-  energi: { title: 'Potensi Energi', icon: Zap, color: 'amber', desc: 'Pengembangan energi baru terbarukan di wilayah pesisir.' },
+  mangrove: { title: 'Ekosistem Mangrove', icon: TreePine, color: 'emerald', desc: 'Hutan mangrove Sebatik Barat dengan keanekaragaman hayati luar biasa.' },
 };
 
 export default function SectorDetail() {
   const { sector } = useParams<{ sector: string }>();
   const [items, setItems] = useState<SanitySectorItem[]>([]);
+  const [mangroves, setMangroves] = useState<SanityMangrove[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   const meta = sectorMeta[sector];
+  const isMangrove = sector === 'mangrove';
 
   useEffect(() => {
     if (!meta) { setLoading(false); return; }
@@ -30,8 +32,13 @@ export default function SectorDetail() {
     async function load() {
       try {
         setLoading(true);
-        const data = await sanityFetch<SanitySectorItem[]>(sectorItemsQuery, { sector });
-        if (mounted) setItems(data || []);
+        if (isMangrove) {
+          const data = await sanityFetch<SanityMangrove[]>(mangrovesQuery);
+          if (mounted) setMangroves(data || []);
+        } else {
+          const data = await sanityFetch<SanitySectorItem[]>(sectorItemsQuery, { sector });
+          if (mounted) setItems(data || []);
+        }
       } catch (err) {
         if (mounted) setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
@@ -54,6 +61,7 @@ export default function SectorDetail() {
   }
 
   const Icon = meta.icon;
+  const dataLength = isMangrove ? mangroves.length : items.length;
 
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
@@ -72,6 +80,7 @@ export default function SectorDetail() {
               meta.color === 'blue' ? "bg-emerald-50 text-emerald-500" :
               meta.color === 'green' ? "bg-emerald-100 text-emerald-600" :
               meta.color === 'orange' ? "bg-orange-100 text-orange-600" :
+              meta.color === 'emerald' ? "bg-emerald-100 text-emerald-600" :
               "bg-amber-100 text-amber-600"
             )}>
               <Icon size={36} />
@@ -96,54 +105,100 @@ export default function SectorDetail() {
         {error && <p className="text-red-600">Gagal memuat data: {error}</p>}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {items.map((item, i) => (
-            <motion.div
-              key={item._id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: i * 0.1 }}
-              className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
-            >
-              {item.imageUrl && (
-                <div className="h-64 overflow-hidden">
-                  <img
-                    src={item.imageUrl}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
-              )}
-              <div className="p-10 space-y-6">
-                <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
-                  <Icon size={24} className="text-emerald-500 shrink-0" />
-                  {item.title}
-                </h3>
-                {item.description && (
-                  <div>
-                    <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                      <Eye size={14} /> Deskripsi
+          {isMangrove
+            ? mangroves.map((item, i) => (
+                <motion.div
+                  key={item._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
+                >
+                  {item.fotoUrl && (
+                    <div className="h-64 overflow-hidden">
+                      <img
+                        src={item.fotoUrl}
+                        alt={item.jenis}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
                     </div>
-                    <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                      {item.description}
-                    </p>
+                  )}
+                  <div className="p-10 space-y-6">
+                    <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
+                      <TreePine size={24} className="text-emerald-500 shrink-0" />
+                      {item.jenis}
+                    </h3>
+                    {item.ciriCiri && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Eye size={14} /> Ciri-ciri
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.ciriCiri}
+                        </p>
+                      </div>
+                    )}
+                    {item.potensiPemanfaatan && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Lightbulb size={14} /> Potensi Pemanfaatan
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.potensiPemanfaatan}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-                {item.potensi && (
-                  <div>
-                    <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                      <Lightbulb size={14} /> Potensi
+                </motion.div>
+              ))
+            : items.map((item, i) => (
+                <motion.div
+                  key={item._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
+                >
+                  {item.imageUrl && (
+                    <div className="h-64 overflow-hidden">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
                     </div>
-                    <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                      {item.potensi}
-                    </p>
+                  )}
+                  <div className="p-10 space-y-6">
+                    <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
+                      <Icon size={24} className="text-emerald-500 shrink-0" />
+                      {item.title}
+                    </h3>
+                    {item.description && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Eye size={14} /> Deskripsi
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.description}
+                        </p>
+                      </div>
+                    )}
+                    {item.potensi && (
+                      <div>
+                        <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
+                          <Lightbulb size={14} /> Potensi
+                        </div>
+                        <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
+                          {item.potensi}
+                        </p>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              ))}
         </div>
 
-        {!loading && !error && items.length === 0 && (
+        {!loading && !error && dataLength === 0 && (
           <p className="text-stone-500 text-center">Belum ada data. Isi melalui Studio Sanity.</p>
         )}
       </div>

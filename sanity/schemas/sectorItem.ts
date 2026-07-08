@@ -14,7 +14,7 @@ export default defineType({
           { title: 'Perikanan', value: 'perikanan' },
           { title: 'Perkebunan', value: 'perkebunan' },
           { title: 'Pariwisata', value: 'pariwisata' },
-          { title: 'Energi', value: 'energi' },
+          { title: 'Mangrove', value: 'mangrove' },
         ],
       },
       validation: (r) => r.required(),

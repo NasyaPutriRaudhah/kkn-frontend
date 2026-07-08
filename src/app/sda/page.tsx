@@ -3,43 +3,31 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'motion/react';
-import { Leaf, Waves, Zap, Landmark, BarChart3, PieChart, ArrowUpRight, TreePine, Eye, Lightbulb, BookOpen } from 'lucide-react';
+import { Leaf, Waves, TreePine, Landmark, BarChart3, PieChart, ArrowUpRight, Zap, BookOpen } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { sanityFetch } from '~/sanity/lib/fetch';
-import { mangrovesQuery, resourceSectorsQuery } from '~/sanity/lib/queries';
-import type { SanityMangrove, SanityResourceSector } from '@/types/sanity';
+import { resourceSectorsQuery } from '~/sanity/lib/queries';
+import type { SanityResourceSector } from '@/types/sanity';
 
 const fallbackSectors = [
   { id: 'perikanan', title: 'Sektor Perikanan', val: '45%', color: 'blue', desc: 'Produksi rumput laut dan ikan tangkap yang menjadi komoditas ekspor utama ke mancanegara.', icon: Waves },
   { id: 'perkebunan', title: 'Sektor Perkebunan', val: '30%', color: 'green', desc: 'Lahan sawit dan kakao yang produktif menyokong pertumbuhan ekonomi desa pedalaman.', icon: Leaf },
   { id: 'pariwisata', title: 'Sektor Pariwisata', val: '15%', color: 'orange', desc: 'Keindahan pantai dan hutan mangrove yang mulai dikembangkan secara profesional.', icon: Landmark },
-  { id: 'energi', title: 'Potensi Energi', val: '10%', color: 'amber', desc: 'Pengembangan energi baru terbarukan berbasis tenaga surya di wilayah pesisir.', icon: Zap },
+  { id: 'mangrove', title: 'Ekosistem Mangrove', val: '10%', color: 'emerald', desc: 'Hutan mangrove Sebatik Barat yang menjadi paru-paru pesisir dengan keanekaragaman hayati luar biasa.', icon: TreePine },
 ];
 
 const iconByCode: Record<string, any> = {
   perikanan: Waves,
   perkebunan: Leaf,
   pariwisata: Landmark,
-  energi: Zap,
+  mangrove: TreePine,
 };
 
 export default function Resources() {
   const [sectors, setSectors] = useState(fallbackSectors);
-  const [mangroves, setMangroves] = useState<SanityMangrove[]>([]);
 
   useEffect(() => {
     let mounted = true;
-
-    async function loadMangroves() {
-      try {
-        const data = await sanityFetch<SanityMangrove[]>(mangrovesQuery);
-        if (mounted) setMangroves(data || []);
-      } catch (error) {
-        console.error('Mangrove endpoint not ready', error);
-      }
-    }
-
-    loadMangroves();
 
     async function loadSectors() {
       try {
@@ -119,6 +107,7 @@ export default function Resources() {
                     sector.color === 'blue' ? "bg-emerald-50 text-emerald-500" :
                     sector.color === 'green' ? "bg-emerald-100 text-emerald-600" :
                     sector.color === 'orange' ? "bg-orange-100 text-orange-600" :
+                    sector.color === 'emerald' ? "bg-emerald-100 text-emerald-600" :
                     "bg-amber-100 text-amber-600"
                   )}>
                     <Icon size={36} />
@@ -196,78 +185,6 @@ export default function Resources() {
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Mangrove Section */}
-        <section className="mb-32">
-          <div className="text-center mb-16">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="inline-block px-4 py-1 bg-emerald-50 dark:bg-emerald-300/30 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-100"
-            >
-              Ekosistem Pesisir
-            </motion.div>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4">
-              Get To Know <span className="text-emerald-500">Mangrove</span> in Sebatik
-            </h2>
-            <p className="text-stone-500 dark:text-stone-600 max-w-2xl mx-auto">
-              Hutan mangrove Sebatik Barat adalah paru-paru pesisir yang menyimpan keanekaragaman hayati luar biasa.
-            </p>
-          </div>
-
-          {mangroves.length === 0 && (
-            <p className="text-stone-500 text-center">Belum ada data mangrove. Isi melalui Studio Sanity.</p>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {mangroves.map((item, i) => (
-              <motion.div
-                key={item._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-white dark:bg-brand-creme rounded-[3rem] overflow-hidden border border-emerald-50 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-700 group"
-              >
-                {item.fotoUrl && (
-                  <div className="h-64 overflow-hidden">
-                    <img
-                      src={item.fotoUrl}
-                      alt={item.jenis}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                )}
-                <div className="p-10 space-y-6">
-                  <h3 className="text-2xl font-black text-emerald-900 dark:text-stone-900 tracking-tight flex items-center gap-3">
-                    <TreePine size={24} className="text-emerald-500 shrink-0" />
-                    {item.jenis}
-                  </h3>
-                    {item.ciriCiri && (
-                      <div>
-                      <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                        <Eye size={14} /> Ciri-ciri
-                      </div>
-                      <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                        {item.ciriCiri}
-                      </p>
-                    </div>
-                  )}
-                  {item.potensiPemanfaatan && (
-                    <div>
-                      <div className="flex items-center gap-2 text-emerald-500 font-black text-[10px] uppercase tracking-widest mb-2">
-                        <Lightbulb size={14} /> Potensi Pemanfaatan
-                      </div>
-                      <p className="text-stone-600 dark:text-stone-500 text-sm leading-relaxed whitespace-pre-line">
-                        {item.potensiPemanfaatan}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
           </div>
         </section>
 
