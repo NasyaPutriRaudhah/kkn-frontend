@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { FileText, ExternalLink, FileSpreadsheet, FileImage, File } from 'lucide-react';
+import { FileText, ExternalLink, FileSpreadsheet, FileImage, File, Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { sanityFetch } from '~/sanity/lib/fetch';
 import { produkHukumQuery } from '~/sanity/lib/queries';
@@ -23,6 +23,7 @@ export default function ProdukHukum() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [desaFilter, setDesaFilter] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let mounted = true;
@@ -43,9 +44,14 @@ export default function ProdukHukum() {
     return () => { mounted = false; };
   }, []);
 
-  const filteredDocuments = desaFilter
-    ? documents.filter((doc) => doc.desa === desaFilter)
-    : documents;
+  const filteredDocuments = documents.filter((doc) => {
+    const matchDesa = desaFilter ? doc.desa === desaFilter : true;
+    const matchSearch = searchQuery
+      ? doc.namaDokumen.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        doc.desa.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+    return matchDesa && matchSearch;
+  });
 
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
@@ -66,7 +72,26 @@ export default function ProdukHukum() {
           </p>
         </header>
 
-        <div className="flex flex-wrap gap-3 mb-16">
+        <div className="flex flex-col gap-4 mb-16">
+          <div className="relative max-w-md">
+            <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" />
+            <input
+              type="text"
+              placeholder="Cari dokumen..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-11 pr-10 py-3 rounded-full bg-white dark:bg-brand-creme border border-stone-200 dark:border-stone-300 text-sm text-stone-700 dark:text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-stone-200 dark:bg-stone-300 flex items-center justify-center text-stone-500 hover:bg-stone-300 transition-colors"
+              >
+                <X size={12} />
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setDesaFilter('')}
             className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
@@ -90,6 +115,7 @@ export default function ProdukHukum() {
               Desa {village}
             </button>
           ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -145,7 +171,9 @@ export default function ProdukHukum() {
             <p className="col-span-full text-stone-500">
               {documents.length === 0
                 ? 'Belum ada dokumen tersedia.'
-                : 'Tidak ada dokumen untuk desa ini.'}
+                : searchQuery
+                  ? `Tidak ada dokumen yang cocok dengan "${searchQuery}".`
+                  : 'Tidak ada dokumen untuk desa ini.'}
             </p>
           )}
         </div>
