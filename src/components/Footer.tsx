@@ -98,8 +98,28 @@ export default function Footer({ settings }: { settings: SanitySiteSettings | nu
 
       </div>
 
-      <div className="max-w-7xl mx-auto pt-10 border-t border-emerald-50 dark:border-stone-300 text-center text-xs text-stone-700 font-bold uppercase tracking-widest">
-        <p>© 2026 KKN-PPM UGM TAKA SEBATIK • KECAMATAN SEBATIK BARAT</p>
+      <div className="max-w-7xl mx-auto pt-10 border-t border-emerald-50 dark:border-stone-300">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <Image
+              src="/assets/logo-sebatik.png"
+              alt="Logo Sebatik Barat"
+              width={40}
+              height={40}
+              className="object-contain"
+            />
+            <Image
+              src="/assets/logo-kkn.jpg"
+              alt="Logo KKN PPM UGM"
+              width={40}
+              height={40}
+              className="object-contain rounded-lg"
+            />
+          </div>
+          <p className="text-xs text-stone-700 font-bold uppercase tracking-widest text-center">
+            © 2026 KKN-PPM UGM TAKA SEBATIK • KECAMATAN SEBATIK BARAT
+          </p>
+        </div>
       </div>
     </footer>
   );
