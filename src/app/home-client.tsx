@@ -188,10 +188,10 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
         </div>
       </section>
 
-      <section className="py-24 px-6 bg-emerald-900 dark:bg-emerald-950 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-400 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-300 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+      <section className="py-24 px-6 bg-stone-100/50 dark:bg-brand-creme/20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-200 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-100 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
         </div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-16">
@@ -199,12 +199,12 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="inline-block px-4 py-1 bg-emerald-500/20 backdrop-blur-md text-emerald-200 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-400/20"
+              className="inline-block px-4 py-1 bg-emerald-100 text-emerald-700 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-200"
             >
               Program Pengabdian
             </motion.div>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">KKN PPM UGM Taka Sebatik</h2>
-            <p className="text-emerald-200/80 max-w-2xl mx-auto text-lg font-light">
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4">KKN PPM UGM Taka Sebatik</h2>
+            <p className="text-stone-500 dark:text-stone-600 max-w-2xl mx-auto text-lg font-light">
               Program Kerja Mahasiswa KKN PPM Universitas Gadjah Mada di Kecamatan Sebatik Barat
             </p>
           </div>
@@ -215,13 +215,13 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+              className="bg-white dark:bg-brand-creme rounded-[2rem] p-8 border border-emerald-100 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
-              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
-                <BookOpen size={24} className="text-emerald-300" />
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <BookOpen size={24} className="text-emerald-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Pendidikan & Literasi</h3>
-              <p className="text-emerald-200/70 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold text-emerald-900 dark:text-stone-900 mb-3">Pendidikan & Literasi</h3>
+              <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed">
                 Program peningkatan literasi digital dan pendidikan bagi masyarakat desa melalui workshop dan bimbingan belajar.
               </p>
             </motion.div>
@@ -231,13 +231,13 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+              className="bg-white dark:bg-brand-creme rounded-[2rem] p-8 border border-emerald-100 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
-              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
-                <Target size={24} className="text-emerald-300" />
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Target size={24} className="text-emerald-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Pemberdayaan Ekonomi</h3>
-              <p className="text-emerald-200/70 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold text-emerald-900 dark:text-stone-900 mb-3">Pemberdayaan Ekonomi</h3>
+              <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed">
                 Penguatan UMKM dan pengembangan potensi ekonomi lokal melalui pelatihan pemasaran digital dan manajemen.
               </p>
             </motion.div>
@@ -247,13 +247,13 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.3 }}
-              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+              className="bg-white dark:bg-brand-creme rounded-[2rem] p-8 border border-emerald-100 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500"
             >
-              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
-                <Handshake size={24} className="text-emerald-300" />
+              <div className="w-14 h-14 bg-emerald-100 dark:bg-emerald-500/20 rounded-2xl flex items-center justify-center mb-6">
+                <Handshake size={24} className="text-emerald-600" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Lingkungan & Sosial</h3>
-              <p className="text-emerald-200/70 text-sm leading-relaxed">
+              <h3 className="text-xl font-bold text-emerald-900 dark:text-stone-900 mb-3">Lingkungan & Sosial</h3>
+              <p className="text-stone-500 dark:text-stone-600 text-sm leading-relaxed">
                 Kegiatan pelestarian lingkungan hidup dan penguatan kapasitas masyarakat di bidang kesehatan.
               </p>
             </motion.div>
@@ -261,41 +261,13 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
 
           {kknItems.length > 0 && (
             <div>
-              <h3 className="text-2xl font-bold text-white mb-8 text-center">Dokumentasi Kegiatan</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {kknItems.map((item, i) => (
-                  <motion.div
-                    key={item._id}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-emerald-400/20 hover:bg-white/15 transition-all duration-500 group"
-                  >
-                    {item.documentationUrls?.[0] && (
-                      <div className="h-48 overflow-hidden">
-                        <img
-                          src={item.documentationUrls[0]}
-                          alt={item.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                      </div>
-                    )}
-                    <div className="p-6">
-                      <div className="flex items-center gap-2 text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-2">
-                        <Calendar size={10} /> {item.date || '-'}
-                      </div>
-                      <h4 className="text-white font-bold mb-2">{item.title}</h4>
-                      <p className="text-emerald-200/60 text-xs leading-relaxed line-clamp-2">{item.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
+              <h3 className="text-2xl font-bold text-emerald-900 dark:text-stone-900 mb-8 text-center">Dokumentasi Kegiatan</h3>
+              <KknCarousel items={kknItems} />
             </div>
           )}
 
           <div className="text-center mt-12">
-            <p className="text-emerald-200/60 text-sm">
+            <p className="text-stone-400 dark:text-stone-500 text-sm">
               Universitas Gadjah Mada &middot; Program Pemberdayaan Masyarakat &middot; Kecamatan Sebatik Barat
             </p>
           </div>
@@ -457,6 +429,121 @@ function DigitalBook({
             onClick={() => scrollTo(i)}
             className={cn(
               'rounded-full transition-all',
+              i === activeIdx ? 'w-8 h-2 bg-emerald-500' : 'w-2 h-2 bg-stone-300 dark:bg-stone-500 hover:bg-stone-400'
+            )}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function KknCarousel({ items }: { items: SanityKknProgram[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [showLeft, setShowLeft] = useState(false);
+  const [showRight, setShowRight] = useState(true);
+
+  const scrollTo = (idx: number) => {
+    if (!scrollRef.current) return;
+    const card = scrollRef.current.children[idx] as HTMLElement;
+    if (!card) return;
+    scrollRef.current.scrollTo({ left: card.offsetLeft - 24, behavior: 'smooth' });
+  };
+
+  const handleScroll = useCallback(() => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, children } = scrollRef.current;
+    let closest = 0;
+    let minDist = Infinity;
+    Array.from(children).forEach((child, i) => {
+      const el = child as HTMLElement;
+      const dist = Math.abs(el.offsetLeft - scrollLeft);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    setActiveIdx(closest);
+    setShowLeft(scrollLeft > 10);
+    setShowRight(scrollLeft < scrollRef.current.scrollWidth - scrollRef.current.clientWidth - 10);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
+
+  return (
+    <div className="relative group/carousel">
+      <div
+        ref={scrollRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 px-1"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {items.map((item, i) => (
+          <motion.div
+            key={item._id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.08, duration: 0.5 }}
+            className="snap-start shrink-0 w-[80%] sm:w-[50%] lg:w-[30%]"
+          >
+            <div className="bg-white dark:bg-brand-creme rounded-2xl overflow-hidden border border-emerald-100 dark:border-stone-300 shadow-sm hover:shadow-2xl transition-all duration-500 group h-full">
+              {item.documentationUrls?.[0] ? (
+                <div className="h-56 overflow-hidden relative">
+                  <img
+                    src={item.documentationUrls[0]}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                    <p className="text-white text-xs font-bold drop-shadow-lg line-clamp-2">{item.title}</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-56 bg-stone-100 dark:bg-stone-200 flex items-center justify-center">
+                  <Calendar size={32} className="text-stone-300" />
+                </div>
+              )}
+              <div className="p-5">
+                <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-bold uppercase tracking-widest mb-2">
+                  <Calendar size={10} /> {item.date || '-'}
+                </div>
+                <h4 className="text-emerald-900 dark:text-stone-900 font-bold mb-2 line-clamp-1">{item.title}</h4>
+                <p className="text-stone-500 dark:text-stone-600 text-xs leading-relaxed line-clamp-2">{item.description}</p>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+
+      {showLeft && (
+        <button
+          onClick={() => scrollTo(activeIdx - 1)}
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white dark:bg-brand-creme shadow-xl border border-emerald-100 dark:border-stone-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-50 hover:scale-110 transition-all z-10 opacity-0 group-hover/carousel:opacity-100 duration-300"
+        >
+          <ChevronLeft size={20} />
+        </button>
+      )}
+      {showRight && (
+        <button
+          onClick={() => scrollTo(activeIdx + 1)}
+          className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white dark:bg-brand-creme shadow-xl border border-emerald-100 dark:border-stone-300 flex items-center justify-center text-emerald-600 hover:bg-emerald-50 hover:scale-110 transition-all z-10 opacity-0 group-hover/carousel:opacity-100 duration-300"
+        >
+          <ChevronRight size={20} />
+        </button>
+      )}
+
+      <div className="flex items-center justify-center gap-2 mt-6">
+        {items.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => scrollTo(i)}
+            className={cn(
+              'rounded-full transition-all duration-300',
               i === activeIdx ? 'w-8 h-2 bg-emerald-500' : 'w-2 h-2 bg-stone-300 dark:bg-stone-500 hover:bg-stone-400'
             )}
           />
