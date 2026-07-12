@@ -143,3 +143,12 @@ export type SanitySiteSettings = {
   tiktok?: string;
   description?: string;
 };
+
+export type SanityStatistic = {
+  _id: string;
+  label: string;
+  value: string;
+  sub?: string;
+  icon?: string;
+  dark?: boolean;
+};

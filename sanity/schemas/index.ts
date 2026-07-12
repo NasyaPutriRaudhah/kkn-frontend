@@ -14,6 +14,7 @@ import calendarEvent from './calendarEvent';
 import publicService from './publicService';
 import sectorItem from './sectorItem';
 import siteSettings from './siteSettings';
+import statistic from './statistic';
 
 export const schemaTypes = [
   news,
@@ -32,4 +33,5 @@ export const schemaTypes = [
   publicService,
   sectorItem,
   siteSettings,
+  statistic,
 ];

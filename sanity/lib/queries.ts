@@ -162,3 +162,12 @@ export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
   tiktok,
   description
 }`;
+
+export const statisticsQuery = `*[_type == "statistic"] | order(order asc) {
+  _id,
+  label,
+  value,
+  sub,
+  icon,
+  dark
+}`;

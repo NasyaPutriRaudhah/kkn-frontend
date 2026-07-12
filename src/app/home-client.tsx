@@ -2,11 +2,11 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef, useState, useCallback, useEffect, ReactNode } from 'react';
-import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight, Briefcase, Building2, BookOpen, Target, Handshake } from 'lucide-react';
+import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight, Briefcase, Building2, BookOpen, Target, Handshake, GraduationCap, Hospital, Route } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
-import type { SanityNews, SanityTourism, SanityKknProgram } from '@/types/sanity';
+import type { SanityNews, SanityTourism, SanityKknProgram, SanityStatistic } from '@/types/sanity';
 
 const SebatikMap = dynamic(() => import('../components/SebatikMap'), {
   ssr: false,
@@ -21,9 +21,10 @@ type HomeClientProps = {
   newsItems: SanityNews[];
   tourismItems: SanityTourism[];
   kknItems: SanityKknProgram[];
+  statistics: SanityStatistic[];
 };
 
-export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeClientProps) {
+export default function HomeClient({ newsItems, tourismItems, kknItems, statistics }: HomeClientProps) {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -92,12 +93,27 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
       <section id="statistik" className="py-24 px-6 relative bg-stone-50 dark:bg-brand-creme">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-8">
-            <StatCard icon={<Users className="text-emerald-500" />} label="Populasi" value="18,450+" sub="Jiwa Terdaftar" />
-            <StatCard icon={<MapIcon className="text-emerald-500" />} label="Luas Wilayah" value="95.2" sub="Kilometer Persegi" dark />
-            <StatCard icon={<Compass className="text-emerald-500" />} label="Desa" value="4" sub="Terintegrasi" />
-            <StatCard icon={<Briefcase className="text-emerald-500" />} label="ASN Kecamatan" value="45+" sub="Aparatur Sipil Negara" dark />
-            <StatCard icon={<Building2 className="text-emerald-500" />} label="Perangkat Desa" value="80+" sub="Seluruh Desa" />
-            <StatCard icon={<Calendar className="text-emerald-500" />} label="Event Tahunan" value="12+" sub="Festival & Budaya" dark />
+            {statistics.length > 0 ? (
+              statistics.map((stat) => (
+                <StatCard
+                  key={stat._id}
+                  icon={<StatIcon name={stat.icon} className="text-emerald-500" />}
+                  label={stat.label}
+                  value={stat.value}
+                  sub={stat.sub || ''}
+                  dark={stat.dark}
+                />
+              ))
+            ) : (
+              <>
+                <StatCard icon={<Users className="text-emerald-500" />} label="Populasi" value="18,450+" sub="Jiwa Terdaftar" />
+                <StatCard icon={<MapIcon className="text-emerald-500" />} label="Luas Wilayah" value="95.2" sub="Kilometer Persegi" dark />
+                <StatCard icon={<Compass className="text-emerald-500" />} label="Desa" value="4" sub="Terintegrasi" />
+                <StatCard icon={<Briefcase className="text-emerald-500" />} label="ASN Kecamatan" value="45+" sub="Aparatur Sipil Negara" dark />
+                <StatCard icon={<Building2 className="text-emerald-500" />} label="Perangkat Desa" value="80+" sub="Seluruh Desa" />
+                <StatCard icon={<Calendar className="text-emerald-500" />} label="Event Tahunan" value="12+" sub="Festival & Budaya" dark />
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -275,6 +291,20 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
       </section>
     </main>
   );
+}
+
+function StatIcon({ name, className }: { name?: string; className?: string }) {
+  switch (name) {
+    case 'map': return <MapIcon className={className} />;
+    case 'compass': return <Compass className={className} />;
+    case 'briefcase': return <Briefcase className={className} />;
+    case 'building': return <Building2 className={className} />;
+    case 'calendar': return <Calendar className={className} />;
+    case 'graduation': return <GraduationCap className={className} />;
+    case 'hospital': return <Hospital className={className} />;
+    case 'road': return <Route className={className} />;
+    default: return <Users className={className} />;
+  }
 }
 
 function StatCard({ icon, label, value, sub, dark }: { icon: ReactNode; label: string; value: string; sub: string; dark?: boolean }) {
