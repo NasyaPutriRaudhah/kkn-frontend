@@ -152,9 +152,9 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
               <h2 className="text-4xl font-serif font-bold text-emerald-900 dark:text-stone-900 mb-4">Berita Terkini</h2>
               <p className="text-stone-500 dark:text-stone-600">Informasi terbaru seputar kegiatan pemerintahan dan masyarakat.</p>
             </div>
-            <button className="flex items-center gap-2 text-emerald-500 font-bold border-b-2 border-emerald-500/20 hover:border-emerald-500 transition-all pb-1">
+            <Link href="/berita" className="flex items-center gap-2 text-emerald-500 font-bold border-b-2 border-emerald-500/20 hover:border-emerald-500 transition-all pb-1">
               Semua Berita <ArrowRight size={18} />
-            </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -166,6 +166,7 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
                   date={item.publishedDate || '-'}
                   title={item.title || 'Judul Berita'}
                   desc={item.content || 'Konten berita dari Studio Sanity.'}
+                  slug={item.slug?.current || ''}
                 />
               ))
             ) : (
@@ -208,26 +209,28 @@ function StatCard({ icon, label, value, sub, dark }: { icon: ReactNode; label: s
   );
 }
 
-function NewsCard({ image, date, title, desc }: { image: string; date: string; title: string; desc: string }) {
+function NewsCard({ image, date, title, desc, slug }: { image: string; date: string; title: string; desc: string; slug: string }) {
   return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      className="bg-white dark:bg-brand-creme rounded-[2rem] p-6 border border-emerald-100 dark:border-stone-300 shadow-sm flex flex-col group"
-    >
-      <div className="w-full h-40 bg-stone-100 dark:bg-stone-200 rounded-2xl mb-6 overflow-hidden relative">
-        {image ? (
-          <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-        ) : null}
-      </div>
-      <div className="flex items-center gap-2 text-emerald-500 font-bold text-[10px] uppercase tracking-widest mb-3">
-        <Calendar size={12} /> {date}
-      </div>
-      <h3 className="text-lg font-bold text-emerald-900 dark:text-stone-900 leading-tight mb-4 group-hover:text-emerald-500 transition-colors line-clamp-2">{title}</h3>
-      <p className="text-xs text-stone-500 dark:text-stone-600 leading-relaxed mb-6 line-clamp-3">{desc}</p>
-      <div className="mt-auto flex items-center gap-2 text-emerald-700 dark:text-emerald-500 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-        Baca Selengkapnya <ArrowRight size={14} />
-      </div>
-    </motion.div>
+    <Link href={`/berita/${slug}`} className="block group">
+      <motion.div
+        whileHover={{ y: -8 }}
+        className="bg-white dark:bg-brand-creme rounded-[2rem] p-6 border border-emerald-100 dark:border-stone-300 shadow-sm flex flex-col h-full hover:shadow-2xl transition-all duration-500"
+      >
+        <div className="w-full h-40 bg-stone-100 dark:bg-stone-200 rounded-2xl mb-6 overflow-hidden relative">
+          {image ? (
+            <img src={image} alt={title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+          ) : null}
+        </div>
+        <div className="flex items-center gap-2 text-emerald-500 font-bold text-[10px] uppercase tracking-widest mb-3">
+          <Calendar size={12} /> {date}
+        </div>
+        <h3 className="text-lg font-bold text-emerald-900 dark:text-stone-900 leading-tight mb-4 group-hover:text-emerald-500 transition-colors line-clamp-2">{title}</h3>
+        <p className="text-xs text-stone-500 dark:text-stone-600 leading-relaxed mb-6 line-clamp-3">{desc}</p>
+        <div className="mt-auto flex items-center gap-2 text-emerald-700 dark:text-emerald-500 text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+          Baca Selengkapnya <ArrowRight size={14} />
+        </div>
+      </motion.div>
+    </Link>
   );
 }
 

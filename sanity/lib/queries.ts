@@ -123,6 +123,24 @@ export const publicServicesQuery = `*[_type == "publicService"] | order(nomor as
   keterangan
 }`;
 
+export const allNewsQuery = `*[_type == "news"] | order(publishedDate desc) {
+  _id,
+  title,
+  slug,
+  content,
+  publishedDate,
+  "thumbnailUrl": thumbnail.asset->url
+}`;
+
+export const newsBySlugQuery = `*[_type == "news" && slug.current == $slug][0] {
+  _id,
+  title,
+  slug,
+  content,
+  publishedDate,
+  "thumbnailUrl": thumbnail.asset->url
+}`;
+
 export const sectorItemsQuery = `*[_type == "sectorItem" && sector == $sector] | order(_createdAt desc) {
   _id,
   sector,

@@ -16,6 +16,7 @@ const navLinks = [
   { name: 'UMKM', href: '/umkm' },
   { name: 'SDA', href: '/sda' },
   { name: 'Budaya', href: '/budaya' },
+  { name: 'Berita', href: '/berita' },
   { name: 'Produk Hukum', href: '/produk-hukum' },
   { name: 'Layanan Publik', href: '/layanan-publik' },
 ];
