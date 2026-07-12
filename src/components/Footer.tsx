@@ -99,7 +99,7 @@ export default function Footer({ settings }: { settings: SanitySiteSettings | nu
       </div>
 
       <div className="max-w-7xl mx-auto pt-10 border-t border-emerald-50 dark:border-stone-300">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col items-center gap-4">
           <div className="flex items-center gap-6">
             <Image
               src="/assets/logo-sebatik.png"
@@ -113,7 +113,7 @@ export default function Footer({ settings }: { settings: SanitySiteSettings | nu
               alt="Logo KKN PPM UGM"
               width={40}
               height={40}
-              className="object-contain rounded-lg"
+              className="object-contain mix-blend-multiply"
             />
           </div>
           <p className="text-xs text-stone-700 font-bold uppercase tracking-widest text-center">
