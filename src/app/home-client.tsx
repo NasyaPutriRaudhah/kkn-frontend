@@ -6,7 +6,7 @@ import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, Chev
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
-import type { SanityNews, SanityTourism, SanityKknProgram, SanityStatistic } from '@/types/sanity';
+import type { SanityNews, SanityTourism, SanityKknProgram, SanityStatistic, SanityProfil } from '@/types/sanity';
 
 const SebatikMap = dynamic(() => import('../components/SebatikMap'), {
   ssr: false,
@@ -22,9 +22,10 @@ type HomeClientProps = {
   tourismItems: SanityTourism[];
   kknItems: SanityKknProgram[];
   statistics: SanityStatistic[];
+  profil: SanityProfil | null;
 };
 
-export default function HomeClient({ newsItems, tourismItems, kknItems, statistics }: HomeClientProps) {
+export default function HomeClient({ newsItems, tourismItems, kknItems, statistics, profil }: HomeClientProps) {
   const heroRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -150,11 +151,11 @@ export default function HomeClient({ newsItems, tourismItems, kknItems, statisti
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
                 <h4 className="font-bold mb-2">Visi</h4>
-                <p className="text-sm text-stone-500 italic">&quot;Terwujudnya Sebatik Barat yang Mandiri, Sejahtera, dan Inovatif.&quot;</p>
+                <p className="text-sm text-stone-500 italic">&quot;{profil?.visi || 'Terwujudnya Sebatik Barat yang Mandiri, Sejahtera, dan Inovatif.'}&quot;</p>
               </div>
               <div className="glass-card p-6 rounded-2xl border-l-4 border-l-emerald-500">
                 <h4 className="font-bold mb-2">Misi</h4>
-                <p className="text-sm text-stone-500 italic">&quot;Optimalisasi potensi desa melalui digitalisasi dan kebudayaan lokal.&quot;</p>
+                <p className="text-sm text-stone-500 italic">&quot;{profil?.misi || 'Optimalisasi potensi desa melalui digitalisasi dan kebudayaan lokal.'}&quot;</p>
               </div>
             </div>
           </motion.div>
