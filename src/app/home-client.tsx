@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef, useState, useCallback, useEffect, ReactNode } from 'react';
-import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight, Briefcase, Building2 } from 'lucide-react';
+import { ArrowRight, Users, Map as MapIcon, Calendar, Compass, ChevronLeft, ChevronRight, Briefcase, Building2, BookOpen, Target, Handshake } from 'lucide-react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { cn } from '../lib/utils';
@@ -185,6 +185,120 @@ export default function HomeClient({ newsItems, tourismItems, kknItems }: HomeCl
         </div>
         <div className="max-w-6xl mx-auto">
           <DigitalBook tourismItems={tourismItems} kknItems={kknItems} />
+        </div>
+      </section>
+
+      <section className="py-24 px-6 bg-emerald-900 dark:bg-emerald-950 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-emerald-400 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-300 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
+        </div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="inline-block px-4 py-1 bg-emerald-500/20 backdrop-blur-md text-emerald-200 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-400/20"
+            >
+              Program Pengabdian
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-white mb-4">KKN PPM UGM Taka Sebatik</h2>
+            <p className="text-emerald-200/80 max-w-2xl mx-auto text-lg font-light">
+              Program Kerja Mahasiswa KKN PPM Universitas Gadjah Mada di Kecamatan Sebatik Barat
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+            >
+              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
+                <BookOpen size={24} className="text-emerald-300" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Pendidikan & Literasi</h3>
+              <p className="text-emerald-200/70 text-sm leading-relaxed">
+                Program peningkatan literasi digital dan pendidikan bagi masyarakat desa melalui workshop dan bimbingan belajar.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+            >
+              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
+                <Target size={24} className="text-emerald-300" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Pemberdayaan Ekonomi</h3>
+              <p className="text-emerald-200/70 text-sm leading-relaxed">
+                Penguatan UMKM dan pengembangan potensi ekonomi lokal melalui pelatihan pemasaran digital dan manajemen.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 border border-emerald-400/20 hover:bg-white/15 transition-all duration-500"
+            >
+              <div className="w-14 h-14 bg-emerald-500/30 rounded-2xl flex items-center justify-center mb-6">
+                <Handshake size={24} className="text-emerald-300" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-3">Lingkungan & Sosial</h3>
+              <p className="text-emerald-200/70 text-sm leading-relaxed">
+                Kegiatan pelestarian lingkungan hidup dan penguatan kapasitas masyarakat di bidang kesehatan.
+              </p>
+            </motion.div>
+          </div>
+
+          {kknItems.length > 0 && (
+            <div>
+              <h3 className="text-2xl font-bold text-white mb-8 text-center">Dokumentasi Kegiatan</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {kknItems.map((item, i) => (
+                  <motion.div
+                    key={item._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.1 }}
+                    className="bg-white/10 backdrop-blur-md rounded-2xl overflow-hidden border border-emerald-400/20 hover:bg-white/15 transition-all duration-500 group"
+                  >
+                    {item.documentationUrls?.[0] && (
+                      <div className="h-48 overflow-hidden">
+                        <img
+                          src={item.documentationUrls[0]}
+                          alt={item.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <div className="flex items-center gap-2 text-emerald-300 text-[10px] font-bold uppercase tracking-widest mb-2">
+                        <Calendar size={10} /> {item.date || '-'}
+                      </div>
+                      <h4 className="text-white font-bold mb-2">{item.title}</h4>
+                      <p className="text-emerald-200/60 text-xs leading-relaxed line-clamp-2">{item.description}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="text-center mt-12">
+            <p className="text-emerald-200/60 text-sm">
+              Universitas Gadjah Mada &middot; Program Pemberdayaan Masyarakat &middot; Kecamatan Sebatik Barat
+            </p>
+          </div>
         </div>
       </section>
     </main>
