@@ -130,3 +130,16 @@ export type SanityCalendarEvent = {
   eventDate: string;
   color?: string;
 };
+
+export type SanitySiteSettings = {
+  _id: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  youtube?: string;
+  tiktok?: string;
+  description?: string;
+};

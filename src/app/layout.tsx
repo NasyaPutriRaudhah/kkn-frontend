@@ -6,6 +6,9 @@ import Footer from '../components/Footer';
 import ScrollToTop from '../components/ScrollToTop';
 import SplashScreen from '../components/SplashScreen';
 import { ThemeProvider } from '../components/ThemeProvider';
+import { sanityFetchServer } from '~/sanity/lib/fetch';
+import { siteSettingsQuery } from '~/sanity/lib/queries';
+import type { SanitySiteSettings } from '@/types/sanity';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -14,11 +17,13 @@ export const metadata: Metadata = {
   description: 'Gerbang kedaulatan di wilayah perbatasan Indonesia dengan integritas pelayanan prima.',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const siteSettings = await sanityFetchServer<SanitySiteSettings>(siteSettingsQuery);
+
   return (
     <html lang="id" suppressHydrationWarning>
       <body className={inter.className}>
@@ -32,7 +37,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
+          <Footer settings={siteSettings} />
         </ThemeProvider>
       </body>
     </html>

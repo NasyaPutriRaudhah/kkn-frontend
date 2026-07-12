@@ -1,11 +1,20 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { Facebook, Twitter, Instagram, Mail, MapPin, Phone } from 'lucide-react';
+import { Facebook, Twitter, Instagram, Youtube, MapPin, Phone, Mail } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import type { SanitySiteSettings } from '@/types/sanity';
 
-export default function Footer() {
+export default function Footer({ settings }: { settings: SanitySiteSettings | null }) {
+  const s: Partial<SanitySiteSettings> = settings || {};
+  const socialLinks = [
+    { url: s.facebook, icon: Facebook, label: 'Facebook' },
+    { url: s.twitter, icon: Twitter, label: 'Twitter' },
+    { url: s.instagram, icon: Instagram, label: 'Instagram' },
+    { url: s.youtube, icon: Youtube, label: 'YouTube' },
+  ].filter((link) => !!link.url);
+
   return (
     <footer className="bg-[#d8d1c1] dark:bg-[#d8d1c1] border-t border-emerald-100 dark:border-stone-300 pt-20 pb-12 px-8">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 mb-20">
@@ -31,20 +40,24 @@ export default function Footer() {
             </div>
           </div>
           <p className="text-stone-500 dark:text-stone-600 text-xs leading-relaxed max-w-xs">
-            Portal Informasi Resmi Kecamatan Sebatik Barat. Gerbang kedaulatan di wilayah perbatasan Indonesia dengan integritas pelayanan prima.
+            {s.description || 'Portal Informasi Resmi Kecamatan Sebatik Barat. Gerbang kedaulatan di wilayah perbatasan Indonesia dengan integritas pelayanan prima.'}
           </p>
-          <div className="flex gap-4">
-            {[Facebook, Twitter, Instagram].map((Icon, i) => (
-              <motion.a
-                key={i}
-                href="#"
-                whileHover={{ y: -4 }}
-                className="w-10 h-10 rounded-xl bg-white dark:bg-brand-creme border border-emerald-100 dark:border-stone-300 flex items-center justify-center text-emerald-500 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
-              >
-                <Icon size={16} />
-              </motion.a>
-            ))}
-          </div>
+          {socialLinks.length > 0 && (
+            <div className="flex gap-4">
+              {socialLinks.map((social) => (
+                <motion.a
+                  key={social.label}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ y: -4 }}
+                  className="w-10 h-10 rounded-xl bg-white dark:bg-brand-creme border border-emerald-100 dark:border-stone-300 flex items-center justify-center text-emerald-500 hover:bg-emerald-600 hover:text-white transition-all shadow-sm"
+                >
+                  <social.icon size={16} />
+                </motion.a>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Links */}
@@ -62,18 +75,24 @@ export default function Footer() {
         <div>
           <h4 className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-6">Informasi Kontak</h4>
           <ul className="flex flex-col gap-5 text-xs text-stone-600 dark:text-stone-600 leading-relaxed font-medium">
-            <li className="flex gap-3">
-              <MapPin size={16} className="text-emerald-500 shrink-0" />
-              <span>Jl. Ahmad Yani No. 1, Desa Binalawan, <br />Kec. Sebatik Barat, Kab. Nunukan</span>
-            </li>
-            <li className="flex gap-3 items-center">
-              <Phone size={16} className="text-emerald-500 shrink-0" />
-              <span>(0556) 123456</span>
-            </li>
-            <li className="flex gap-3 items-center">
-              <Mail size={16} className="text-emerald-500 shrink-0" />
-              <span>kontak@sebatikbarat.go.id</span>
-            </li>
+            {s.address && (
+              <li className="flex gap-3">
+                <MapPin size={16} className="text-emerald-500 shrink-0" />
+                <span>{s.address}</span>
+              </li>
+            )}
+            {s.phone && (
+              <li className="flex gap-3 items-center">
+                <Phone size={16} className="text-emerald-500 shrink-0" />
+                <span>{s.phone}</span>
+              </li>
+            )}
+            {s.email && (
+              <li className="flex gap-3 items-center">
+                <Mail size={16} className="text-emerald-500 shrink-0" />
+                <span>{s.email}</span>
+              </li>
+            )}
           </ul>
         </div>
 

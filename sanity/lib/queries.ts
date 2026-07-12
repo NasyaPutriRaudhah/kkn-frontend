@@ -149,3 +149,16 @@ export const sectorItemsQuery = `*[_type == "sectorItem" && sector == $sector] |
   potensi,
   "imageUrl": image.asset->url
 }`;
+
+export const siteSettingsQuery = `*[_type == "siteSettings"][0] {
+  _id,
+  address,
+  phone,
+  email,
+  facebook,
+  twitter,
+  instagram,
+  youtube,
+  tiktok,
+  description
+}`;
