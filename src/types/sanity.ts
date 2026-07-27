@@ -56,6 +56,15 @@ export type SanityVillage = {
   imageUrl?: string | null;
 };
 
+export type SanityVillageProfile = {
+  _id: string;
+  badge?: string;
+  pageTitle: string;
+  pageDescription?: string;
+  mapTitle?: string;
+  mapDescription?: string;
+};
+
 export type SanityProdukHukum = {
   _id: string;
   namaDokumen: string;

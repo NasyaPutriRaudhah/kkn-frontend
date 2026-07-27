@@ -3,7 +3,7 @@
 import { motion } from 'motion/react';
 import { MapPin, Users, LandPlot, Waves, Navigation } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import type { SanityVillage } from '@/types/sanity';
+import type { SanityVillage, SanityVillageProfile } from '@/types/sanity';
 
 const fallbackVillages: SanityVillage[] = [
   {
@@ -79,9 +79,19 @@ function mapVillages(data: SanityVillage[]): VillageUI[] {
     .filter(Boolean) as VillageUI[];
 }
 
-export default function KewilayahanClient({ villages: serverVillages }: { villages: SanityVillage[] }) {
+export default function KewilayahanClient({
+  villages: serverVillages,
+  profile,
+}: {
+  villages: SanityVillage[];
+  profile: SanityVillageProfile | null;
+}) {
   const hasData = serverVillages.length > 0;
   const villages = hasData ? mapVillages(serverVillages) : mapVillages(fallbackVillages);
+
+  const badge = profile?.badge || 'Regional & Data';
+  const pageTitle = profile?.pageTitle || 'Data Terpadu.';
+  const pageDescription = profile?.pageDescription || 'Eksplorasi mendalam 4 desa mandiri yang menjadi pilar kedaulatan Sebatik Barat.';
 
   return (
     <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
@@ -92,11 +102,11 @@ export default function KewilayahanClient({ villages: serverVillages }: { villag
             animate={{ opacity: 1, scale: 1 }}
             className="inline-block px-4 py-1 bg-emerald-50 dark:bg-emerald-300/30 text-emerald-600 dark:text-emerald-400 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-emerald-100"
           >
-            Regional & Data
+            {badge}
           </motion.div>
-          <h1 className="text-6xl md:text-8xl font-black text-emerald-900 dark:text-stone-900 mb-10 tracking-tighter">Data Terpadu.</h1>
+          <h1 className="text-6xl md:text-8xl font-black text-emerald-900 dark:text-stone-900 mb-10 tracking-tighter">{pageTitle}</h1>
           <p className="text-stone-500 dark:text-stone-600 max-w-2xl mx-auto text-xl font-light leading-relaxed">
-            Eksplorasi mendalam 4 desa mandiri yang menjadi pilar kedaulatan Sebatik Barat.
+            {pageDescription}
           </p>
           {!hasData && (
             <p className="text-amber-600 text-sm mt-4">

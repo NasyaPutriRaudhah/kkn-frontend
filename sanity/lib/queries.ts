@@ -56,6 +56,15 @@ export const villagesQuery = `*[_type == "village"] | order(name asc) {
   "imageUrl": image.asset->url
 }`;
 
+export const villageProfileQuery = `*[_type == "villageProfile"][0] {
+  _id,
+  badge,
+  pageTitle,
+  pageDescription,
+  mapTitle,
+  mapDescription
+}`;
+
 export const produkHukumQuery = `*[_type == "produkHukum"] | order(_createdAt desc) {
   _id,
   namaDokumen,

@@ -5,6 +5,7 @@ import profil from './profil';
 import strukturOrganisasi from './strukturOrganisasi';
 import gallery from './gallery';
 import village from './village';
+import villageProfile from './villageProfile';
 import produkHukum from './produkHukum';
 import facility from './facility';
 import umkm from './umkm';
@@ -24,6 +25,7 @@ export const schemaTypes = [
   strukturOrganisasi,
   gallery,
   village,
+  villageProfile,
   produkHukum,
   facility,
   umkm,

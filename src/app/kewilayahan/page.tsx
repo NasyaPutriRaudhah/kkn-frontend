@@ -1,6 +1,6 @@
 import { sanityFetchServer } from '~/sanity/lib/fetch';
-import { villagesQuery } from '~/sanity/lib/queries';
-import type { SanityVillage } from '@/types/sanity';
+import { villagesQuery, villageProfileQuery } from '~/sanity/lib/queries';
+import type { SanityVillage, SanityVillageProfile } from '@/types/sanity';
 import KewilayahanClient from './kewilayahan-client';
 
 export const metadata = {
@@ -9,6 +9,9 @@ export const metadata = {
 };
 
 export default async function KewilayahanPage() {
-  const villages = await sanityFetchServer<SanityVillage[]>(villagesQuery);
-  return <KewilayahanClient villages={villages} />;
+  const [villages, profile] = await Promise.all([
+    sanityFetchServer<SanityVillage[]>(villagesQuery),
+    sanityFetchServer<SanityVillageProfile>(villageProfileQuery),
+  ]);
+  return <KewilayahanClient villages={villages} profile={profile} />;
 }
