@@ -16,7 +16,7 @@ function getFileIcon(url: string) {
   return File;
 }
 
-const VILLAGES = ['Setabu', 'Bambangan', 'Tembaring', 'Binalawan', 'Liang Bunyu'] as const;
+const VILLAGES = ['Setabu', 'Bambangan', 'Tembaring', 'Binalawan', 'Liang Bunyu', 'Sebatik Barat'] as const;
 
 export default function ProdukHukum() {
   const [documents, setDocuments] = useState<SanityProdukHukum[]>([]);
@@ -112,7 +112,7 @@ export default function ProdukHukum() {
                   : 'bg-white dark:bg-brand-creme text-stone-600 hover:bg-emerald-50 border border-stone-200 dark:border-stone-300'
               }`}
             >
-              Desa {village}
+              {village === 'Sebatik Barat' ? 'Kecamatan Sebatik Barat' : `Desa ${village}`}
             </button>
           ))}
           </div>
