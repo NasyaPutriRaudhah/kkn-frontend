@@ -18,6 +18,7 @@ export default defineType({
           { title: 'Desa Tembaring', value: 'Tembaring' },
           { title: 'Desa Binalawan', value: 'Binalawan' },
           { title: 'Desa Liang Bunyu', value: 'Liang Bunyu' },
+          { title: 'Kecamatan Sebatik Barat', value: 'Sebatik Barat' },
         ],
       },
       validation: (r) => r.required(),
