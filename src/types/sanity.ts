@@ -110,7 +110,6 @@ export type SanityResourceSector = {
   code: string;
   title: string;
   value?: string;
-  color?: string;
   description?: string;
 };
 
@@ -125,7 +124,7 @@ export type SanityPublicService = {
 
 export type SanitySectorItem = {
   _id: string;
-  sector: string;
+  sector: { _id: string; code: string; title: string };
   title: string;
   description?: string;
   potensi?: string;

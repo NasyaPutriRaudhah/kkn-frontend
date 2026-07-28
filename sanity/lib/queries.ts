@@ -110,7 +110,6 @@ export const resourceSectorsQuery = `*[_type == "resourceSector"] | order(orderR
   code,
   title,
   value,
-  color,
   description
 }`;
 
@@ -150,9 +149,9 @@ export const newsBySlugQuery = `*[_type == "news" && slug.current == $slug][0] {
   "thumbnailUrl": thumbnail.asset->url
 }`;
 
-export const sectorItemsQuery = `*[_type == "sectorItem" && sector == $sector] | order(_createdAt desc) {
+export const sectorItemsQuery = `*[_type == "sectorItem" && sector->code == $sector] | order(_createdAt desc) {
   _id,
-  sector,
+  "sector": sector-> { _id, code, title },
   title,
   description,
   potensi,

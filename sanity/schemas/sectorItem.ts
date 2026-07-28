@@ -8,15 +8,8 @@ export default defineType({
     defineField({
       name: 'sector',
       title: 'Sektor',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Perikanan', value: 'perikanan' },
-          { title: 'Perkebunan', value: 'perkebunan' },
-          { title: 'Pariwisata', value: 'pariwisata' },
-          { title: 'Mangrove', value: 'mangrove' },
-        ],
-      },
+      type: 'reference',
+      to: [{ type: 'resourceSector' }],
       validation: (r) => r.required(),
     }),
     defineField({ name: 'title', title: 'Nama', type: 'string', validation: (r) => r.required() }),
@@ -25,6 +18,9 @@ export default defineType({
     defineField({ name: 'potensi', title: 'Potensi', type: 'text' }),
   ],
   preview: {
-    select: { title: 'title', subtitle: 'sector' },
+    select: { title: 'title', sectorTitle: 'sector.title' },
+    prepare({ title, sectorTitle }) {
+      return { title, subtitle: sectorTitle };
+    },
   },
 });
