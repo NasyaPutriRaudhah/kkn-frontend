@@ -4,34 +4,51 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion } from 'motion/react';
-import { Waves, Leaf, Landmark, TreePine, ArrowLeft, Eye, Lightbulb, LucideIcon } from 'lucide-react';
+import { Waves, Leaf, Landmark, TreePine, ArrowLeft, Eye, Lightbulb, type LucideIcon } from 'lucide-react';
 import { sanityFetch } from '~/sanity/lib/fetch';
-import { sectorItemsQuery, mangrovesQuery } from '~/sanity/lib/queries';
-import type { SanitySectorItem, SanityMangrove } from '@/types/sanity';
+import { sectorItemsQuery, mangrovesQuery, resourceSectorByCodeQuery } from '~/sanity/lib/queries';
+import type { SanitySectorItem, SanityMangrove, SanityResourceSector } from '@/types/sanity';
 
-const sectorMeta: Record<string, { title: string; icon: LucideIcon; color: string; desc: string }> = {
-  perikanan: { title: 'Sektor Perikanan', icon: Waves, color: 'blue', desc: 'Potensi dan hasil perikanan di Sebatik Barat.' },
-  perkebunan: { title: 'Sektor Perkebunan', icon: Leaf, color: 'green', desc: 'Komoditas perkebunan yang menjadi andalan ekonomi.' },
-  pariwisata: { title: 'Sektor Pariwisata', icon: Landmark, color: 'orange', desc: 'Destinasi wisata alam dan budaya Sebatik Barat.' },
-  mangrove: { title: 'Ekosistem Mangrove', icon: TreePine, color: 'emerald', desc: 'Hutan mangrove Sebatik Barat dengan keanekaragaman hayati luar biasa.' },
+const iconByCode: Record<string, LucideIcon> = {
+  perikanan: Waves,
+  perkebunan: Leaf,
+  pariwisata: Landmark,
+  mangrove: TreePine,
 };
 
 export default function SectorDetail() {
   const { sector } = useParams<{ sector: string }>();
+  const [sectorData, setSectorData] = useState<SanityResourceSector | null>(null);
   const [items, setItems] = useState<SanitySectorItem[]>([]);
   const [mangroves, setMangroves] = useState<SanityMangrove[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState('');
 
-  const meta = sectorMeta[sector];
   const isMangrove = sector === 'mangrove';
+  const Icon = iconByCode[sector] || Landmark;
 
   useEffect(() => {
-    if (!meta) { setLoading(false); return; }
+    if (!sector) { setNotFound(true); setLoading(false); return; }
     let mounted = true;
     async function load() {
       try {
         setLoading(true);
+
+        const [sectorResult] = await Promise.all([
+          sanityFetch<SanityResourceSector | null>(resourceSectorByCodeQuery, { code: sector }),
+        ]);
+
+        if (!mounted) return;
+
+        if (!sectorResult && !isMangrove) {
+          setNotFound(true);
+          setLoading(false);
+          return;
+        }
+
+        setSectorData(sectorResult);
+
         if (isMangrove) {
           const data = await sanityFetch<SanityMangrove[]>(mangrovesQuery);
           if (mounted) setMangroves(data || []);
@@ -49,7 +66,7 @@ export default function SectorDetail() {
     return () => { mounted = false; };
   }, [sector]);
 
-  if (!meta) {
+  if (notFound) {
     return (
       <div className="pt-32 pb-24 px-8 bg-stone-50 dark:bg-brand-creme min-h-screen">
         <div className="max-w-3xl mx-auto">
@@ -60,7 +77,6 @@ export default function SectorDetail() {
     );
   }
 
-  const Icon = meta.icon;
   const dataLength = isMangrove ? mangroves.length : items.length;
 
   return (
@@ -75,14 +91,7 @@ export default function SectorDetail() {
 
         <header className="mb-24">
           <div className="flex items-center gap-6 mb-8">
-            <div className={cn(
-              "w-20 h-20 rounded-[1.5rem] flex items-center justify-center shadow-sm",
-              meta.color === 'blue' ? "bg-emerald-50 text-emerald-500" :
-              meta.color === 'green' ? "bg-emerald-100 text-emerald-600" :
-              meta.color === 'orange' ? "bg-orange-100 text-orange-600" :
-              meta.color === 'emerald' ? "bg-emerald-100 text-emerald-600" :
-              "bg-amber-100 text-amber-600"
-            )}>
+            <div className="w-20 h-20 rounded-[1.5rem] flex items-center justify-center shadow-sm bg-emerald-50 text-emerald-500">
               <Icon size={36} />
             </div>
             <div>
@@ -94,11 +103,13 @@ export default function SectorDetail() {
                 Sumber Daya Alam
               </motion.div>
               <h1 className="text-5xl md:text-7xl font-black text-emerald-900 dark:text-stone-900 tracking-tighter leading-none">
-                {meta.title}
+                {sectorData?.title || (isMangrove ? 'Ekosistem Mangrove' : sector)}
               </h1>
             </div>
           </div>
-          <p className="text-stone-500 dark:text-stone-600 text-xl font-light max-w-2xl">{meta.desc}</p>
+          <p className="text-stone-500 dark:text-stone-600 text-xl font-light max-w-2xl">
+            {sectorData?.description || (isMangrove ? 'Hutan mangrove Sebatik Barat dengan keanekaragaman hayati luar biasa.' : 'Potensi sumber daya alam di sektor ini.')}
+          </p>
         </header>
 
         {loading && <p className="text-stone-500">Memuat data...</p>}
@@ -256,8 +267,4 @@ export default function SectorDetail() {
       </div>
     </div>
   );
-}
-
-function cn(...classes: (string | boolean | undefined | null)[]) {
-  return classes.filter(Boolean).join(' ');
 }

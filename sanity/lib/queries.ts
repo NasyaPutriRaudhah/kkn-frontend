@@ -105,6 +105,13 @@ export const mangrovesQuery = `*[_type == "mangrove"] | order(_createdAt desc) {
   "fotoKeseluruhanUrl": fotoKeseluruhan.asset->url
 }`;
 
+export const resourceSectorByCodeQuery = `*[_type == "resourceSector" && code == $code][0] {
+  _id,
+  code,
+  title,
+  description
+}`;
+
 export const resourceSectorsQuery = `*[_type == "resourceSector"] | order(orderRank) {
   _id,
   code,
